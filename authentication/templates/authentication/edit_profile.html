@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Profile - Tanamin</title>
+</head>
+
+<body>
+
+<h1>Edit Profile</h1>
+
+<form method="POST">
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button type="submit">
+        Save Changes
+    </button>
+</form>
+
+<a href="{% url 'authentication:profile' %}">
+    Cancel
+</a>
+
+</body>
+</html>

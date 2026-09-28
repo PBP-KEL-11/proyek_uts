@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register - Tanamin</title>
+</head>
+
+<body>
+
+<h1>Register</h1>
+
+<form method="POST">
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button type="submit">
+        Register
+    </button>
+</form>
+
+<p>
+    Already have an account?
+    <a href="{% url 'authentication:login_user' %}">
+        Login
+    </a>
+</p>
+
+</body>
+</html>

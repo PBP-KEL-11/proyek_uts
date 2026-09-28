@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profile - Tanamin</title>
+</head>
+
+<body>
+
+<h1>Profile</h1>
+
+<p>
+    Username:
+    {{ user.username }}
+</p>
+
+<p>
+    Email:
+    {{ user.email }}
+</p>
+
+<p>
+    Phone:
+    {{ user.phone }}
+</p>
+
+<p>
+    First Name:
+    {{ user.first_name }}
+</p>
+
+<p>
+    Last Name:
+    {{ user.last_name }}
+</p>
+
+<p>
+    Role:
+    {{ user.role }}
+</p>
+
+<a href="{% url 'authentication:edit_profile' %}">
+    <button>Edit Profile</button>
+</a>
+
+<a href="{% url 'authentication:logout_user' %}">
+    <button>Logout</button>
+</a>
+
+</body>
+</html>
