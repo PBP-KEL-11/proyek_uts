@@ -18,6 +18,13 @@
     </button>
 </form>
 
+
+{% if messages %}
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
 <p>
     Don't have an account yet?
     <a href="{% url 'authentication:register' %}">

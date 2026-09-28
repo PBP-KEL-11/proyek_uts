@@ -41,11 +41,7 @@ def login_user(request):
 
             messages.success(request, 'Login berhasil!')
 
-
-            response = redirect('main:show_main')
-            response.set_cookie('last_login', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-
-            return response
+            return redirect('main:show_main')
         
     else:
         form = AuthenticationForm(request)
@@ -85,7 +81,5 @@ def edit_profile(request):
 
 def logout_user(request):
     logout(request)
-    response = redirect("main:show_main")
-    response.delete_cookie("last_login")    #  menghapus cookie last_login menggunakan method delete_cookie()
-                                            #  agar informasi di browser klien tetap sinkron dan bersih
+    response = redirect('main:show_main')
     return response
