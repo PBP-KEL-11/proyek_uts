@@ -8,6 +8,12 @@
 
 <h1>Login</h1>
 
+{% if messages %}
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
 <form method="POST">
     {% csrf_token %}
 
@@ -18,12 +24,6 @@
     </button>
 </form>
 
-
-{% if messages %}
-    {% for message in messages %}
-        <p>{{ message }}</p>
-    {% endfor %}
-{% endif %}
 
 <p>
     Don't have an account yet?
