@@ -1,29 +1,37 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html>
 <head>
     <title>Register - Tanamin</title>
+    <link rel="stylesheet" href="{% static 'authentication/style.css' %}">
 </head>
 
 <body>
 
-<h1>Register</h1>
-
 <form method="POST">
+
     {% csrf_token %}
+
+    <!-- Judul di dalam box -->
+    <h1>Daftar Akun</h1>
 
     {{ form.as_p }}
 
     <button type="submit">
         Register
     </button>
+
 </form>
 
-<p>
-    Already have an account?
-    <a href="{% url 'authentication:login_user' %}">
-        Login
-    </a>
-</p>
+<div class="login-links">
+    <p class="login-link">
+        Sudah memiliki akun?
+        <a href="{% url 'authentication:login_user' %}">
+            Login
+        </a>
+    </p>
+</div>
 
 </body>
 </html>

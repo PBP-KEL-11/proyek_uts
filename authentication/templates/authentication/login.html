@@ -1,7 +1,10 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html>
 <head>
     <title>Login - Tanamin</title>
+    <link rel="stylesheet" href="{% static 'authentication/style.css' %}">
 </head>
 
 <body>
@@ -10,7 +13,9 @@
 
 {% if messages %}
     {% for message in messages %}
-        <p>{{ message }}</p>
+        <script>
+            alert("{{ message }}");
+        </script>
     {% endfor %}
 {% endif %}
 
@@ -25,15 +30,20 @@
 </form>
 
 
-<p>
-    Don't have an account yet?
-    <a href="{% url 'authentication:register' %}">
-        Register
-    </a>
-     <a href="{% url 'password_reset' %}">
+<div class="login-links">
+
+    <a href="{% url 'password_reset' %}">
         Forgot Password?
     </a>
-</p>
+
+    <p>
+        Don't have an account yet?
+        <a href="{% url 'authentication:register' %}">
+            Register
+        </a>
+    </p>
+
+</div>
 
 </body>
 </html>

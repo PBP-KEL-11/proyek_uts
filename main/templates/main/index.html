@@ -1,53 +1,169 @@
+{% load static %}
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Tanamin</title>
+
+    <link rel="stylesheet" href="{% static 'css/main/style.css' %}">
 </head>
 
 <body>
 
-    
+    <script src="{% static 'js/main/script.js' %}"></script>
+
+    <header class="site-header">
+        <div class="container">
+
+            <!-- Brand -->
+            <a href="{% url 'main:show_main' %}" class="brand">
+                {{ name }}
+            </a>
+
+            <!-- Navigation -->
+            <nav class="nav-menu">
+
+                {% if user.is_authenticated %}
+                    <a href="{% url 'notes:index' %}">
+                        Jurnal
+                    </a>
+
+                    <a href="{% url 'schedules:index' %}">
+                        Schedule
+                    </a>
+
+                    <a href="{% url 'plants:index' %}">
+                        Plants
+                    </a>
+
+                    <a href="{% url 'dashboard:index' %}">
+                        Dashboard
+                    </a>
+
+                
+
+                    <a href="{% url 'authentication:profile' %}"
+                       class="btn-login">
+                        Profile
+                    </a>
+
+                    <a href="{% url 'authentication:logout_user' %}"
+                       class="btn-register">
+                        Logout
+                    </a>
+
+                {% else %}
+
+                    <a href="{% url 'authentication:login_user' %}"
+                       class="btn-login">
+                        Login
+                    </a>
+
+                    <a href="{% url 'authentication:register' %}"
+                       class="btn-register">
+                        Register
+                    </a>
+
+                {% endif %}
+
+            </nav>
+
+        </div>
+    </header>
+
+
 {% if messages %}
     {% for message in messages %}
-        <p>{{ message }}</p>
+        <script>
+            alert("{{ message }}");
+        </script>
     {% endfor %}
 {% endif %}
 
-<h1>Welcome to Tanamin!</h1>
 
-{% if user.is_authenticated %}
 
-    <p>
-        Halo, {{ user.username }}!
-    </p>
+    <main>
 
-    <p>
-        Kamu sudah login.
-    </p>
+        <section class="hero">
 
-    <a href="{% url 'authentication:profile' %}">
-        Profile
-    </a>
+            <div class="hero-content">
 
-    <br><br>
+                {% if user.is_authenticated %}
 
-    <a href="{% url 'authentication:logout_user' %}">
-        Logout
-    </a>
+                    <p class="hero-greeting">
+                        Halo, {{ user.username }}!
+                        <br>
+                        Welcome back to
+                    </p>
 
-{% else %}
+                    <h1>
+                         Tanamin!
+                    </h1>
 
-    <a href="{% url 'authentication:login_user' %}">
-        Login
-    </a>
+                    <p class="hero-description">
+                        Ubah sudut apartemen dan teras rumah menjadi oasis hijauyang subur. 
+                        Tanamin membantu kamu merawat tanaman dengan pengingat yang sesuai kebutuhan,
+                        serta membuat setiap langkah perawatan terasa lebih menyenangkan.
+                    </p>
 
-    <br><br>
+                    <div class="hero-actions">
+                        <a href="{% url 'plants:index' %}"
+                           class="btn-primary">
+                            My Plants
+                        </a>
 
-    <a href="{% url 'authentication:register' %}">
-        Register
-    </a>
+                        <a href="{% url 'schedules:index' %}"
+                           class="btn-secondary">
+                            View Schedule
+                        </a>
+                    </div>
 
-{% endif %}
+                {% else %}
+
+                    <p class="hero-greeting">
+                        Welcome to
+                    </p>
+
+                    <h1>
+                        Tanamin
+                    </h1>
+
+                    <p class="hero-description">
+                        Ubah sudut apartemen dan teras rumah menjadi oasis hijauyang subur. 
+                        Tanamin membantu kamu merawat tanaman dengan pengingat yang sesuai kebutuhan,
+                        serta membuat setiap langkah perawatan terasa lebih menyenangkan.
+                    </p>
+
+                    <div class="hero-actions">
+
+                        <a href="{% url 'authentication:register' %}" class="btn-primary">
+                            Get Started
+                        </a>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+
+
+    <footer class="site-footer">
+
+        <p>
+            © 2026 Tanamin. Grow better, together.
+        </p>
+
+    </footer>
 
 </body>
 </html>
