@@ -1,0 +1,14 @@
+{% extends 'notes/base_notes.html' %}
+{% block content %}
+<div class="notes-page n-form">
+  <div class="n-sec">
+    <h1 style="font-size:28px">Hapus catatan?</h1>
+    <p class="n-sub">"{{ note.title }}" ({{ note.plant_name }}) akan dihapus permanen beserta fotonya.</p>
+    <form method="post" style="display:flex;gap:12px">
+      {% csrf_token %}
+      <a href="{% url 'notes:index' %}" class="n-btn o" style="flex:1">Batal</a>
+      <button type="submit" class="n-btn d" style="flex:1">Ya, hapus</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
