@@ -1,0 +1,262 @@
+@import url('https://fonts.googleapis.com/css2?family=Jaro&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary: #347338;
+    --secondary: #A5BF99;
+    --tertiary: #134023;
+    --neutral: #11261A;
+
+    --background: #E9FFED;
+    --white: #FFFFFF;
+    --transparent: rgba(255, 255, 255, 0.25);
+
+    --radius: 4px;
+    --radius-card: 16px;
+}
+
+
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: var(--neutral);
+    background-color: var(--background);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* navigation bar */
+
+.site-header {
+    width: 100%;
+    padding: 20px 0;
+    background-color: var(--background);
+}
+
+.site-header .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.brand {
+    font-family: 'Jaro', sans-serif;
+    font-size: 32px;
+    color: var(--tertiary);
+    text-decoration: none;
+    letter-spacing: 0.5px;
+}
+
+.nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+}
+
+.nav-menu a {
+    color: var(--neutral);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+
+    transition: color 0.2s ease;
+}
+
+.nav-menu a:hover {
+    color: var(--primary);
+}
+
+/* Login button */
+
+.nav-menu .btn-login {
+    padding: 9px 20px;
+    border: 1.5px solid var(--primary);
+    border-radius: var(--radius);
+
+    color: var(--primary);
+    background-color: transparent;
+
+    transition: all 0.2s ease;
+}
+
+.nav-menu .btn-login:hover {
+    color: var(--white);
+    background-color: var(--primary);
+}
+
+/* Register dan Logout button */
+
+.nav-menu .btn-register {
+    padding: 9px 20px;
+    border-radius: var(--radius);
+
+    color: var(--white);
+    background-color: var(--primary);
+
+    transition: all 0.2s ease;
+}
+
+.nav-menu .btn-register:hover {
+    background-color: var(--tertiary);
+}
+
+/* messages yg muncul saat berhasil login */
+
+.messages {
+    max-width: 1200px;
+    margin: 10px auto;
+    padding: 0 32px;
+}
+
+
+/* HERO */
+
+.hero {
+    width: 100%;
+    height: 600px;
+
+    padding: 100px 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    text-align: left;
+
+    background-image: url('/static/img/main/background-image.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.hero-content {
+    max-width: 750px;
+    margin: 0 auto;
+    transform: translateX(-200px);
+}
+
+.hero-greeting {
+    margin-bottom: 12px;
+
+    color: var(--primary);
+    font-size: 50px;
+    font-weight: 600;
+}
+
+.hero h1 {
+    margin-bottom: 24px;
+
+    font-family: 'Jaro', sans-serif;
+    font-size: 150px;
+    font-weight: 400;
+    line-height: 1.1;
+
+    color: var(--tertiary);
+}
+
+.hero-description {
+    max-width: 600px;
+    margin: 0 auto 32px;
+
+    color: #4C6152;
+    font-size: 16px;
+    line-height: 1.8;
+}
+
+/* hero buttons */
+
+.hero-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+}
+
+.btn-primary,
+.btn-secondary {
+    display: inline-block;
+    padding: 12px 24px;
+
+    border-radius: var(--radius);
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    color: var(--white);
+    background-color: var(--primary);
+}
+
+.btn-primary:hover {
+    background-color: var(--tertiary);
+}
+
+.btn-secondary {
+    color: var(--primary);
+    background-color: transparent;
+    border: 1.5px solid var(--primary);
+}
+
+.btn-secondary:hover {
+    color: var(--white);
+    background-color: var(--primary);
+}
+
+/* footer */
+
+.site-footer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 32px;
+
+    text-align: center;
+
+    color: #657568;
+    font-size: 13px;
+}
+
+
+
+@media (max-width: 768px) {
+
+    .site-header .container {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .nav-menu {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 16px;
+    }
+
+    .hero {
+        padding: 70px 24px 90px;
+    }
+
+    .hero h1 {
+        font-size: 42px;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        width: 200px;
+        text-align: center;
+    }
+}

@@ -1,0 +1,189 @@
+@import url('https://fonts.googleapis.com/css2?family=Jaro&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary: #347338;
+    --secondary: #A5BF99;
+    --tertiary: #134023;
+    --neutral: #11261A;
+
+    --radius: 4px;
+    --radius-card: 16px;
+
+    --background: #E9FFED;
+    --transparent: rgba(255, 255, 255, 0.25)
+
+}
+
+.site-header {
+    border-bottom: 2px solid var(--line);
+}
+
+.container {
+  display: flex;
+}
+
+body {
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--neutral);
+    background-color: var(--background);
+    line-height: 1.6;
+}
+
+h1 {
+    font-family: 'Bowlby One SC', sans-serif;
+    font-size: 30px;
+    font-weight: 400;
+
+    color: #1E4E21;
+
+    margin-top: 28px;
+    margin-bottom: 28px;
+
+    text-align: center;
+}
+
+
+
+form {
+    margin: 120px;
+    width: 440px;
+
+    background: rgba(239, 255, 241, 0.95);
+
+    padding: 38px 46px;
+
+    margin-left: auto;
+    
+    border-radius: 24px;
+
+    box-shadow:
+        0 4px 18px rgba(17, 38, 26, 0.12),
+        0 1px 4px rgba(17, 38, 26, 0.06);
+}
+
+
+
+
+form p {
+    margin-bottom: 14px;
+}
+
+
+/* Label */
+
+form label {
+    display: block;
+
+    font-size: 16px;
+    font-weight: 500;
+
+    color: #11261A;
+
+    margin-bottom: 7px;
+}
+
+
+/* Input */
+
+form input {
+    width: 100%;
+    height: 40px;
+
+    border: none;
+    border-radius: 9px;
+
+    background: #FFFFFF;
+
+    padding: 0 14px;
+
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14px;
+
+    color: #11261A;
+
+    outline: none;
+
+    transition: 0.2s ease;
+}
+
+
+/* Placeholder */
+
+form input::placeholder {
+    color: #B8BEB9;
+}
+
+
+/* Saat input diklik */
+
+form input:focus {
+    box-shadow: 0 0 0 2px #A5BF99;
+}
+
+
+/* regis button */
+
+form button {
+    width: 100%;
+    height: 40px;
+
+    margin-top: 10px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: #134023;
+    color: #A5BF99;
+
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+
+form button:hover {
+    background: #347338;
+    color: #FFFFFF;
+}
+
+
+/* login */
+
+body > p {
+    margin-top: 20px;
+
+    font-size: 14px;
+
+    color: #11261A;
+
+    text-align: center;
+
+}
+
+
+body > p a {
+    color: #11261A;
+
+    font-weight: 500;
+
+    margin-left: 8px;
+
+    text-decoration: underline;
+
+    transition: 0.2s ease;
+}
+
+
+body > p a:hover {
+    color: #347338;
+}

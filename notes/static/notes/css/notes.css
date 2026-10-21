@@ -1,0 +1,45 @@
+/* CSS modul Notes (Jurnal Tanamin) */
+  .n-body{font-family:"Plus Jakarta Sans",sans-serif}
+  .notes-page{max-width:1180px;margin:0 auto;padding:40px 24px;display:flex;flex-direction:column;gap:24px;font-family:"Plus Jakarta Sans",sans-serif;color:#11261A}
+  .notes-page h1{margin:0;font-size:36px;font-weight:800;color:#134023}
+  .n-sub{margin:6px 0 0;color:#3E5A46;font-size:16px}
+  .n-btn{font-family:inherit;font-weight:600;font-size:15px;border-radius:8px;padding:12px 22px;min-height:44px;cursor:pointer;border:1px solid #347338;display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none}
+  .n-btn.p{background:#347338;color:#fff}.n-btn.o{background:transparent;color:#347338}.n-btn.d{background:#C62828;border-color:#C62828;color:#fff}
+  .in{font-family:inherit;font-size:15px;width:100%;padding:14px 16px;border-radius:10px;border:1px solid #A5BF99;background:#fff;color:#11261A;min-height:48px}
+  .n-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+  .n-search{display:flex;gap:12px}.n-search .in{flex:1}
+  .n-chips{display:flex;gap:10px;flex-wrap:wrap}
+  .n-chip{font-weight:600;font-size:14px;padding:10px 16px;border-radius:12px;border:1px solid #A5BF99;background:#F5FDF4;color:#134023;text-decoration:none;min-height:44px;display:inline-flex;align-items:center}
+  .n-chip.on{background:#DDEBD5;border-color:#347338}
+  .n-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
+  .n-card{background:#F5FDF4;border:1px solid #CFE5CC;border-radius:20px;overflow:hidden;display:flex;flex-direction:column}
+  .n-photo{height:190px;background:linear-gradient(135deg,#CFE5CC,#A5BF99);display:flex;align-items:center;justify-content:center;position:relative}
+  .n-photo img{width:100%;height:100%;object-fit:cover}
+  .n-pill{position:absolute;top:12px;font-size:12px;font-weight:700;padding:5px 11px;border-radius:999px}
+  .n-loc{left:12px;background:#F5FDF4;color:#134023}
+  .n-status{right:12px;background:#DDEBD5;color:#134023}
+  .st-growing{background:#347338;color:#fff}.st-harvesting{background:#134023;color:#fff}.st-planned{background:#EEF2EC;color:#3E5A46}
+  .n-body{padding:20px;display:flex;flex-direction:column;gap:6px;flex:1}
+  .n-body h3{margin:0;font-size:19px;color:#134023}
+  .n-meta{font-size:14px;font-style:italic;color:#5C7564}
+  .n-body p{margin:6px 0;font-size:14px;line-height:1.6;color:#3E5A46}
+  .n-foot{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:10px;border-top:1px solid #DDEBD5;font-size:13px;color:#3E5A46}
+  .n-act{display:flex;gap:8px}
+  .n-ib{width:44px;height:44px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;color:#fff;text-decoration:none;border:0;cursor:pointer}
+  .n-empty{padding:48px;text-align:center;background:#F5FDF4;border:1px dashed #A5BF99;border-radius:20px;color:#3E5A46}
+  .n-form{max-width:760px}
+  .n-sec{background:#F5FDF4;border:1px solid #CFE5CC;border-radius:20px;padding:28px;display:flex;flex-direction:column;gap:16px}
+  .n-sec .t{font-size:12px;font-weight:800;letter-spacing:.12em;color:#5C7564;text-transform:uppercase}
+  .n-field{display:flex;flex-direction:column;gap:8px}
+  .n-field label{font-weight:600;font-size:14px;color:#134023}
+  .n-two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .n-err{color:#C62828;font-size:13px;font-weight:600}
+  .n-radios{display:flex;gap:10px;flex-wrap:wrap}
+  .n-radios label{cursor:pointer}
+  .n-radios input{position:absolute;opacity:0}
+  .n-radios span{display:inline-flex;align-items:center;min-height:44px;padding:8px 16px;border-radius:12px;border:1px solid #A5BF99;background:#F5FDF4;color:#134023;font-weight:600;font-size:14px}
+  .n-radios input:checked + span{background:#DDEBD5;border-color:#347338}
+  .n-radios input:focus-visible + span{outline:3px solid #347338}
+  .n-drop{border:2px dashed #A5BF99;border-radius:16px;padding:24px;background:#fff;display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+  .n-drop img{max-width:200px;border-radius:12px}
+  @media(max-width:640px){.n-two{grid-template-columns:1fr}}
