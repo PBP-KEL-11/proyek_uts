@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="{% static '/style.css' %}">
+        <title>Admin Dashboard</title>
+    </head>
+
+    <body>
+        <header class="dashboard-header"></header>
+        <main class="dashboard-main">
+            
+            <section class="search-section">
+                <form method="get" class="search-form">
+                    <input type="search" class="search-form__input">
+                    <button type="submit" class="search-button">Search</button>
+                </form>
+            </section>
+
+            <section class="card-grid-section">
+                <div class="card-grid-container">
+                    <div class="column-name">
+                        <p>Nama</p>
+                        <p>Level</p>
+                        <p>Gelar</p>
+                        <p>Badge Aktif</p>
+                    </div>
+                    {% for greentrack in greentracks %}
+                        <div class="card-container">
+                            <p class="profile-name"> {{greentrack.user}} </p>
+                            <p class="profile-level-number"> Lvl {{greentrack.level_number}}</p>
+                            <p class="profile-level-name">{{greentrack.current_level}}</p>
+                            <p class="profile-badge"> {{greentrack.active_badge}} </p>
+                        </div>
+                    {% empty %}
+                    <div class="empty-state">
+                        <p>Tanamin Belum Memiliki Pengguna</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+        </main>
+        <footer class="dashboard-footer"> </footer>
+    </body>
+</html>

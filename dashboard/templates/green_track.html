@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="{% static '/style.css' %}">
+        <title>Your Green Track Details</title>
+    </head>
+
+    <body>
+        <header></header>
+        
+        <main>
+          <section class="greentrack-details-section">
+            <div class="greentrack-details-container">
+                <div class="greentrack-details-image">
+
+                </div>
+
+                <div class="greentrack-details-detail">
+                    <h2 class="greentrack-details-username">{{greentrack.user}}</h2>
+                    <div class="greentrack-details-level">
+                        <p class="greentrack-details-progress"> {{greentrack.current_xp}} / {{greentrack.xp_max}}</p>
+                        <div class="greentrack-details-progress-bar"></div>
+                    </div>
+                    <div class="greentrack-details-active-badge">
+
+                    </div>
+                </div>
+            </div>
+          </section>  
+        </main>
+
+        <footer></footer>
+    </body>
+</html>
