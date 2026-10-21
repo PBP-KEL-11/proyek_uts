@@ -31,7 +31,11 @@ SECRET_KEY = 'django-insecure-^by@wm*$j$5okm2s*n=++7i(_n+4frn0j3-c1ag!p#hke!2k(o
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "finna-aprilia-tanamin.pws.cs.ui.ac.id"]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://finna-aprilia-tanamin.pws.cs.ui.ac.id',
+]
 
 PRODUCTION = os.getenv('PRODUCTION', 'False').lower() == 'true'
 
@@ -49,9 +53,14 @@ INSTALLED_APPS = [
     'main',
     'authentication',
     'phonenumber_field',
+    'notes',
+    'schedules',
+    'plants',
+    'dashboard',
 ]
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -60,6 +69,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 ROOT_URLCONF = 'Tanamin.urls'
 
@@ -142,6 +154,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+WHITENOISE_USE_FINDERS = True
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -152,8 +166,9 @@ AUTH_USER_MODEL = 'authentication.User'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 EMAIL_HOST = 'smtp-relay.brevo.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
 EMAIL_HOST_USER = 'bbc94f001@smtp-brevo.com'
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = 'tanamin.project@gmail.com'
+EMAIL_TIMEOUT = 10
