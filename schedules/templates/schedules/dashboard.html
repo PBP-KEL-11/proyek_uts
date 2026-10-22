@@ -1,0 +1,149 @@
+{% extends 'notes/base_notes.html' %}
+
+{% block content %}
+<style>
+    /* Styling khusus Modul 3 agar tidak merusak CSS milik tim */
+    .schedule-container {
+        max-width: 900px;
+        margin: 40px auto;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        color: #11261A;
+    }
+    .schedule-section {
+        margin-bottom: 40px;
+    }
+    .schedule-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: #134023;
+        margin-bottom: 20px;
+    }
+    .task-card {
+        background-color: #ffffff;
+        border: 1px solid #A5BF99;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .task-info h3 {
+        margin: 0 0 5px 0;
+        color: #134023;
+        font-size: 18px;
+    }
+    .task-info p {
+        margin: 0;
+        font-size: 14px;
+        color: #555;
+    }
+    .btn-done {
+        background-color: #347338;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    .btn-done:hover {
+        background-color: #134023;
+    }
+    .empty-state {
+        text-align: center;
+        padding: 40px;
+        background-color: #F5F9F5;
+        border: 1px dashed #A5BF99;
+        border-radius: 12px;
+        color: #666;
+    }
+    .log-table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #ffffff;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid #A5BF99;
+    }
+    .log-table th {
+        background-color: #EAF2EB;
+        color: #134023;
+        text-align: left;
+        padding: 15px;
+        font-weight: 600;
+    }
+    .log-table td {
+        padding: 15px;
+        border-bottom: 1px solid #EAF2EB;
+        font-size: 14px;
+    }
+    .log-table tr:last-child td {
+        border-bottom: none;
+    }
+    .badge-task {
+        background-color: #D2E3D0;
+        color: #134023;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+</style>
+
+<div class="schedule-container">
+    <!-- Bagian 1: Daily Task Dashboard -->
+    <div class="schedule-section">
+        <h1 class="schedule-title">Daily Tasks</h1>
+        <div class="task-list">
+            {% for task in pending_tasks %}
+            <div class="task-card">
+                <div class="task-info">
+                    <h3>{{ task.plant_name }}</h3>
+                    <p>Tugas: <strong>{{ task.get_task_type_display }}</strong> &bull; Tenggat: {{ task.due_date|date:"d M Y" }}</p>
+                </div>
+                <form method="POST" action="{% url 'schedules:complete_task' task.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-done">Tandai Selesai</button>
+                </form>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                Tidak ada tugas perawatan tanaman hari ini. Santai dulu!
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Bagian 2: Plant Care Log -->
+    <div class="schedule-section">
+        <h2 class="schedule-title">Plant Care Log</h2>
+        <table class="log-table">
+            <thead>
+                <tr>
+                    <th>Nama Tanaman</th>
+                    <th>Perawatan</th>
+                    <th>Tanggal Selesai</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in care_logs %}
+                <tr>
+                    <td><strong>{{ log.plant_name }}</strong></td>
+                    <td><span class="badge-task">{{ log.get_task_type_display }}</span></td>
+                    <td>{{ log.completed_at|date:"d M Y, H:i" }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3" class="empty-state" style="border:none;">
+                        Belum ada riwayat perawatan. Selesaikan tugas harianmu dulu!
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock content %}
