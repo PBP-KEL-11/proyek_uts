@@ -1,0 +1,54 @@
+{% extends 'notes/base_notes.html' %}
+{% block content %}
+<div class="notes-page">
+  <div class="n-head">
+    <div>
+      <h1>Jurnal Tanamanku</h1>
+      <p class="n-sub">Catat progres dan kejadian penting tiap tanamanmu.</p>
+    </div>
+    <a href="{% url 'notes:create' %}" class="n-btn p">+ Tambah Catatan</a>
+  </div>
+
+  <form method="get" class="n-search">
+    <label for="q" style="position:absolute;left:-9999px">Cari catatan</label>
+    <input id="q" class="in" type="text" name="q" value="{{ q }}" placeholder="Cari judul, tanaman, atau lokasi">
+    {% if selected_category %}<input type="hidden" name="category" value="{{ selected_category }}">{% endif %}
+    <button type="submit" class="n-btn p">Cari</button>
+  </form>
+
+  <div class="n-chips">
+    <a href="{% url 'notes:index' %}{% if q %}?q={{ q }}{% endif %}" class="n-chip {% if not selected_category %}on{% endif %}">Semua</a>
+    {% for value, label in categories %}
+      <a href="?category={{ value }}{% if q %}&q={{ q }}{% endif %}" class="n-chip {% if selected_category == value %}on{% endif %}">{{ label }}</a>
+    {% endfor %}
+  </div>
+
+  {% if notes %}
+  <div class="n-grid">
+    {% for note in notes %}
+    <div class="n-card">
+      <div class="n-photo">
+        {% if note.image %}<img src="{{ note.image.url }}" alt="Foto {{ note.plant_name }}">{% endif %}
+        {% if note.location %}<span class="n-pill n-loc">{{ note.location }}</span>{% endif %}
+        <span class="n-pill n-status st-{{ note.status }}">{{ note.get_status_display }}</span>
+      </div>
+      <div class="n-body">
+        <h3>{{ note.title }}</h3>
+        <div class="n-meta">{{ note.plant_name }} &middot; {{ note.get_category_display }}</div>
+        {% if note.content %}<p>{{ note.content|truncatechars:110 }}</p>{% endif %}
+        <div class="n-foot">
+          <div><b>Tanam: {{ note.planted_date|date:"j M Y" }}</b><br>{{ note.get_planting_method_display }}</div>
+          <div class="n-act">
+            <a href="{% url 'notes:edit' note.pk %}" class="n-ib" style="background:#4F7A55" aria-label="Edit catatan">&#9998;</a>
+            <a href="{% url 'notes:delete' note.pk %}" class="n-ib" style="background:#C62828" aria-label="Hapus catatan">&#10005;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="n-empty">Belum ada catatan. Klik <b>Tambah Catatan</b> untuk mulai menulis jurnal tanamanmu.</div>
+  {% endif %}
+</div>
+{% endblock %}
