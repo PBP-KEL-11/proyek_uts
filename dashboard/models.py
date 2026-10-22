@@ -24,7 +24,7 @@ class GreenTrack(models.Model):
              2000,
              5000]
     
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     current_xp = models.IntegerField(default=0)
     xp_max = models.IntegerField(default=XPMAX[0])
     level_number = models.IntegerField(default=1)
@@ -33,3 +33,23 @@ class GreenTrack(models.Model):
     streak = models.IntegerField(default=0)
     carbon_absorption = models.FloatField(default=0.0)
 
+def add_xp():
+    None
+    
+def update_level():
+    None
+    
+def activate_badge():
+    None
+    
+def dispatch_badge():
+    None
+    
+def update_streak():
+    None
+
+def dispatch_streak():
+    None
+    
+def calculate_carbon_absorption():
+    None

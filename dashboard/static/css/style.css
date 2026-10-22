@@ -1,0 +1,288 @@
+@import url('https://fonts.googleapis.com/css2?family=Jaro&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary: #347338;
+    --secondary: #A5BF99;
+    --tertiary: #134023;
+    --neutral: #11261A;
+
+    --background: #E9FFED;
+    --white: #FFFFFF;
+    --transparent: rgba(255, 255, 255, 0.25);
+
+    --radius: 4px;
+    --radius-card: 16px;
+}
+
+
+
+
+.site-header {
+    width: 100%;
+    padding: 20px 0;
+    background-color: var(--background);
+}
+
+.site-header .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.brand {
+    font-family: 'Jaro', sans-serif;
+    font-size: 32px;
+    color: var(--tertiary);
+    text-decoration: none;
+    letter-spacing: 0.5px;
+}
+
+.nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+}
+
+.nav-menu a {
+    color: var(--neutral);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+
+    transition: color 0.2s ease;
+}
+
+.nav-menu a:hover {
+    color: var(--primary);
+}
+
+/* Login button */
+
+.nav-menu .btn-login {
+    padding: 9px 20px;
+    border: 1.5px solid var(--primary);
+    border-radius: var(--radius);
+
+    color: var(--primary);
+    background-color: transparent;
+
+    transition: all 0.2s ease;
+}
+
+.nav-menu .btn-login:hover {
+    color: var(--white);
+    background-color: var(--primary);
+}
+
+/* Register dan Logout button */
+
+.nav-menu .btn-register {
+    padding: 9px 20px;
+    border-radius: var(--radius);
+
+    color: var(--white);
+    background-color: var(--primary);
+
+    transition: all 0.2s ease;
+}
+
+.nav-menu .btn-register:hover {
+    background-color: var(--tertiary);
+}
+
+
+
+
+
+
+
+
+.admin-dashboard-body{
+    background-image: url('../img/background-image.jpeg');
+    background-size:cover;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+}
+
+.dashboard-main{
+    width: 1050px;
+    min-height: 600px;
+    background-color: var(--secondary);
+    margin-left: 150px;
+    margin-right: 150px;
+}
+
+.admin-dashboard-title{
+    font-family: "jaro", sans-serif;
+    padding-top: 50px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.search-form{
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    margin-left: 185px;
+    margin-right: 130px;
+    margin-top: 40px;
+}
+
+.search-form__input{
+    width: 1000px;
+    min-width: 0;
+    padding: 0.7rem;
+    border: 1px solid var(--neutral);
+    border-radius: var(--neutral);
+    background: #fff;
+    color: var(#000);
+    padding-right: 5px;
+}
+
+.search-form__input:focus {
+    outline: 2px solid var(#000);
+    border-color: var(#000);
+}
+
+.card-grid-container{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.column-name{
+    display: flex;
+    margin-top:20px;
+    border: 3px solid #11261A;
+    font-weight: 600;
+    border-radius: 5px;
+    height:50px;
+    width:1000px;
+    justify-content: space-around;
+    align-items: center;
+    font-family: 'Jaro';
+}
+
+.card-container{
+    display: flex;
+    margin-top:20px;
+    background-color: var(--neutral);
+    border: 3px solid var(--background);
+    color: var(--background);
+    font-weight: 200;
+    border-radius: 5px;
+    height:50px;
+    width:1000px;
+    justify-content: space-around;
+    align-items: center;
+    font-family: "jaro", sans-serif;
+}
+
+.card-container:hover{
+    background-color: var(--background);
+    border: 3px solid var(--neutral);
+    color: var(--neutral);
+    transition: background-color 0.2s ease;;
+}
+
+
+.greentrack-details-main{
+    background-color: var(--secondary);
+    min-height: 550px;
+}
+
+.greentrack-details-container{
+    display: grid;
+    grid-template-columns: 0.3fr 1fr;
+    grid-template-areas: 
+    "image" "username-level-xp"
+    "image" "badge" ;
+    gap: 0rem 0rem;
+}
+
+.greentrack-details-image{
+    grid-area: "image";
+    width: 400px;
+    height: 500px;
+    border: 3px solid var(--neutral);
+    border-radius: 5px;
+    align-items: center;
+    margin-left: 50px;
+    margin-top: 20px;
+}
+
+.greentrack-details-detail{
+    grid-area: "username-level-xp";
+    align-items: center;
+    text-align: center;
+}
+
+.greentrack-details-username{
+    font-size: 60px;
+    font-family: "jaro", sans-serif;
+    font-weight: 400;
+}
+
+.greentrack-details-level{
+    font-size:40px;
+    font-family: "jaro", sans-serif;
+    font-weight: 300;
+    color: var(--primary);
+}
+
+.greentrack-details-title{
+    font-size:20px;
+    font-family: "jaro", sans-serif;
+    font-weight: 200;
+    color: var(--neutral);
+}
+
+.greentrack-details-xp{
+    padding-top: 35px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: x-large;
+    color: var(--neutral);
+}
+
+.greentrack-details-active-badge{
+    margin-top: 50px;
+    padding-top: 50px;
+    font-family: "jaro", sans-serif;
+    font-weight: 300;
+    color: var(--secondary);
+    background-color: var(--neutral);
+    border: 3px solid var(--primary);
+    border-radius: 4px;
+    height: 225px;
+    width: 400px;
+    margin-left: 260px;
+    font-size: 25px;
+}
+
+.active-badge-title{
+    font-family: "jaro", sans-serif;
+    font-weight: 200;
+    color: var(--background);
+}
+
+
+.site-footer {
+    margin: 0 auto;
+    padding: 24px 32px;
+
+    text-align: center;
+    background-color: var(--background);
+
+    color: #657568;
+    font-size: 13px;
+}

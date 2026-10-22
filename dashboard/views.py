@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from dashboard.models import GreenTrack
+from authentication.models import User
 # Create your views here.
 
 
@@ -15,8 +16,8 @@ def show_admin_greentrack_cards(request):
     }
     return render(request, "admin_dashboard.html", context)
 
-def show_admin_greentrack_details(request, username):
-    greentrack = get_object_or_404(GreenTrack, user=username)
+def show_admin_greentrack_details(request):
+    greentrack = get_object_or_404(GreenTrack, user=User.objects.all()[0])
     context = {
         "greentrack":greentrack
     }
