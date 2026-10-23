@@ -4,8 +4,11 @@
 <style>
     /* Styling khusus Modul 3 agar tidak merusak CSS milik tim */
     .schedule-container {
+        width: 100%;
         max-width: 900px;
         margin: 40px auto;
+        box-sizing: border-box;
+        padding: 0 20px;
         font-family: 'Plus Jakarta Sans', sans-serif;
         color: #11261A;
     }
@@ -27,8 +30,10 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        gap: 20px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
+    .task-info { flex: 1; min-width: 0; }
     .task-info h3 {
         margin: 0 0 5px 0;
         color: #134023;
@@ -48,10 +53,17 @@
         font-weight: 600;
         cursor: pointer;
         transition: background-color 0.2s;
+        flex-shrink: 0;
+        white-space: nowrap;
+        font-family: inherit;
+        font-size: 16px;
     }
     .btn-done:hover {
         background-color: #134023;
     }
+    .task-card.done { opacity: 0.6; background-color: #F5F9F5; }
+    .task-card.done h3 { text-decoration: line-through; }
+    .badge-done { color: #347338; font-weight: 700; font-size: 14px; }
     .empty-state {
         text-align: center;
         padding: 40px;
@@ -99,21 +111,30 @@
         <h1 class="schedule-title">Daily Tasks</h1>
         <div class="task-list">
             {% for task in pending_tasks %}
-            <div class="task-card">
+            <div class="task-card{% if task.is_completed %} done{% endif %}">
                 <div class="task-info">
                     <h3>{{ task.plant_name }}</h3>
-                    <p>Tugas: <strong>{{ task.get_task_type_display }}</strong> &bull; Tenggat: {{ task.due_date|date:"d M Y" }}</p>
+                    <p>Tugas: <strong>{{ task.get_task_type_display }}</strong> &bull; {{ task.due_date|date:"d M Y" }}</p>
                 </div>
+                {% if task.is_completed %}
+                <span class="badge-done">&#10003; Selesai</span>
+                {% else %}
                 <form method="POST" action="{% url 'schedules:complete_task' task.id %}">
                     {% csrf_token %}
                     <button type="submit" class="btn-done">Tandai Selesai</button>
                 </form>
-            </div>
-            {% empty %}
-            <div class="empty-state">
-                Tidak ada tugas perawatan tanaman hari ini. Santai dulu!
+                {% endif %}
             </div>
             {% endfor %}
+            {% if needs_plant %}
+            <div class="task-card">
+                <div class="task-info">
+                    <h3>Tambahkan 1 tanaman ke Jurnal</h3>
+                    <p>Tugas: <strong>Tambah Tanaman</strong> &bull; {{ today|date:"d M Y" }}</p>
+                </div>
+                <a href="{% url 'notes:create' %}" class="btn-done" style="text-decoration:none;">Tambah Tanaman</a>
+            </div>
+            {% endif %}
         </div>
     </div>
 
@@ -146,4 +167,16 @@
         </table>
     </div>
 </div>
+<script>
+    // Auto-refresh tepat saat pergantian hari (tengah malam waktu lokal browser),
+    // supaya Daily Tasks hari baru muncul tanpa perlu reload manual.
+    (function () {
+        function msUntilMidnight() {
+            var now = new Date();
+            var next = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 2);
+            return next - now;
+        }
+        setTimeout(function () { window.location.reload(); }, msUntilMidnight());
+    })();
+</script>
 {% endblock content %}
