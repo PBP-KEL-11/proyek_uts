@@ -17,6 +17,11 @@ class PlantTask(models.Model):
     is_completed = models.BooleanField(default=False)
     completed_at = models.DateTimeField(null=True, blank=True)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'task_type', 'due_date'], name='unique_task_per_type_per_day'),
+        ]
+
     def mark_as_done(self):
         self.is_completed = True
         self.completed_at = timezone.now()
