@@ -17,10 +17,6 @@ SUNLIGHT_OPTIONS = [("full_shade", "Teduh penuh"), ("part_shade", "Teduh sebagia
                     ("sun-part_shade", "Matahari + teduh"), ("full_sun", "Matahari penuh")]
 
 
-def index(request):
-    return redirect("plants:species_list")
-
-
 def species_list_page(request):
     filters = {
         "q": request.GET.get("q", "").strip(),

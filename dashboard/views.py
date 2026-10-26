@@ -10,14 +10,17 @@ from plants.models import GardenPlant
 from notes.models import Note
 # Create your views here.
 
+def show_base(request):
+    return render(request, "dashboard/base_dashboard.html")
 
+@login_required
 def show_admin_greentrack_cards(request):
     query = request.GET.get("title", "").strip()
     context = {
-        "title":"Dashboard Admin",
+        "title":"Pemain Greentrack",
         "query":query
     }
-    return render(request, "dashboard/admin_dashboard.html", context)
+    return render(request, "dashboard/admin_greentrack_dashboard.html", context)
 
 
 def get_greentrack_json(request):
@@ -32,7 +35,7 @@ def get_greentrack_json(request):
         greentrack_data.append({
             "pk":str(greentrack.user.id),
             "fields": {
-                "username":greentrack.user.username,
+                "username":greentrack.user,
                 "current_xp":greentrack.current_xp,
                 "xp_max":greentrack.xp_max,
                 "active_badge":greentrack.active_badge,
@@ -58,6 +61,47 @@ def show_user_greentrack_details(request, id):
     }
     return render(request, "green_track.html", context)
 
+
+def show_admin_gardenplants_cards(request):
+    query = request.GET.get("title", "").strip()
+    context = {
+        "title":"Tanaman para Pengguna Tanamin",
+        "query":query
+    }
+    return render(request, "dashboard/admin_user_dashboard.html", context)
+
+def get_gardenplants_json(request):
+    query = request.GET.get("title", "").strip()
+    garden_plants = GardenPlant.objects.all()
+    
+    if query:
+        garden_plants = GardenPlant.filter(user__icontains=query)
+
+    garden_plants_data = []
+    for garden_plant in garden_plants:
+        garden_plants_data.append({
+            "pk":str(garden_plant.user.id),
+            "fields":{
+                "user":garden_plant.user,
+                "plant":garden_plant.plant,
+                "notes":garden_plant.notes,
+                "last_watered":garden_plant.last_watered,
+                "added_at":garden_plant.added_at,
+            }
+        })
+
+def show_admin_gardenplants_details(request, id):
+    username=request.user
+    garden_plant = get_object_or_404(
+        GardenPlant,
+        pk=id,
+        user=request.user,
+    )
+    context = {
+        "user":username,
+        "garden_plant":garden_plant,
+    }
+    return render(request, "dashboard/admin_user_detail.html", )
 
 @login_required
 def index(request):

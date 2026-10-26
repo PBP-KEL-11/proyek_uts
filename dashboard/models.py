@@ -34,3 +34,5 @@ class GreenTrack(models.Model):
     active_badge = models.CharField(default="Tidak Ada Badge Aktif")
     streak = models.IntegerField(default=0)
     carbon_absorption = models.FloatField(default=0.0)
+    greentrack_nickname = models.CharField(max_length=20)
+    greentrack_description = models.TextField()

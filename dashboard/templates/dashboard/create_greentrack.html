@@ -1,82 +1,8 @@
-{% load static %}
-<html>
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="{% static '/css/style.css' %}">
-        <title>Create Your Green Track</title>
-    </head>
+{% extends "dashboard/base_dashboard.html" %}
+{% block meta %}
+    <title> Detail Tanaman<title>
+{% endblock meta %}
 
-    <body>
-        <header class="site-header">
-            <div class="container">
-
-                <!-- Brand -->
-                <a href="{% url 'main:show_main' %}" class="brand">
-                    {{ name }}
-                </a>
-
-                <!-- Navigation -->
-                <nav class="nav-menu">
-
-                    {% if user.is_authenticated %}
-                        <a href="{% url 'notes:index' %}">
-                            Jurnal
-                        </a>
-
-                        <a href="{% url 'schedules:index' %}">
-                            Schedule
-                        </a>
-
-                        <a href="{% url 'plants:index' %}">
-                            Plants
-                        </a>
-
-                        <a href="{% url 'dashboard:index' %}">
-                            Dashboard
-                        </a>
-
-                    
-
-                        <a href="{% url 'authentication:profile' %}"
-                        class="btn-login">
-                            Profile
-                        </a>
-
-                        <a href="{% url 'authentication:logout_user' %}"
-                        class="btn-register">
-                            Logout
-                        </a>
-
-                    {% else %}
-
-                        <a href="{% url 'authentication:login_user' %}"
-                        class="btn-login">
-                            Login
-                        </a>
-
-                        <a href="{% url 'authentication:register' %}"
-                        class="btn-register">
-                            Register
-                        </a>
-
-                    {% endif %}
-
-                </nav>
-
-            </div>
-        </header>
-
-        <main>
-            
-        </main>
-
-        <footer class="site-footer">
-
-            <p>
-                © 2026 Tanamin. Grow better, together.
-            </p>
-
-        </footer>
-    </body>
-</html>
+{%block content%}
+        
+{%endblock content%}

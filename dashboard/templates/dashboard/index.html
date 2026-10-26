@@ -343,6 +343,10 @@
             <a href="{% url 'schedules:index' %}">Schedule</a>
             <a href="{% url 'plants:species_list' %}">Tanaman</a>
             <a href="{% url 'dashboard:index' %}">Kebun Saya</a>
+            {% if user.is_superuser %}
+                <a href="{% url 'dashboard:show_admin_greentrack_cards' %}">Pemain Green Track</a>
+                <a href="{% url 'dashboard:show_admin_users_cards' %}"> Tanaman Pengguna Tanamin</a>
+            {% endif %}
             <a href="{% url 'authentication:profile' %}" class="btn-login">Profile</a>
             <a href="{% url 'authentication:logout_user' %}" class="btn-register">Logout</a>
         </nav>
