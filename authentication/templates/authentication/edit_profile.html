@@ -14,15 +14,33 @@
 
     <!-- Sidebar (sama dengan halaman profile) -->
     <aside class="profile-sidebar">
+        <div>
+            <a href="{% url 'main:show_main' %}" class="btn-kembali" title="Kembali"
+                onclick="if (document.referrer) { history.back(); return false; }">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" 
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+                    stroke-linejoin="round" class="lucide lucide-arrow-left preview-icon">
+                    <path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>
+                </svg>
+                <span class="nav-label">Kembali</span>
+            </a>
+        </div>
+        <br>
         <div class="sidebar-top">
             <div class="sidebar-user-info">
                 <div class="user-avatar-placeholder">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" 
-                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
-                        stroke-linejoin="round" class="lucide lucide-circle-user-round preview-icon">
-                        <path d="M17.925 20.056a6 6 0 0 0-11.851.001"/>
-                        <circle cx="12" cy="11" r="4"/><circle cx="12" cy="12" r="10"/>
-                    </svg>
+                     {% if user.photo %}
+                            <div class="avatar-circle-sidebar">
+                                    <img src="{{ user.photo.url }}" alt="Foto profil" class="avatar-img">
+                            </div>
+                    {% else %}
+                        <span class="user-icon">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" 
+                                stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M17.925 20.056a6 6 0 0 0-11.851.001"/><circle cx="12" cy="11" r="4"/>
+                                <circle cx="12" cy="12" r="10"/></svg>
+                        </span>
+                    {% endif %}
                 </div>
                 <div class="sidebar-user-text">
                     <div class="sidebar-username">{{ user.username }}</div>
@@ -69,40 +87,33 @@
                 </a>
             </nav>
         </div>
-
-        <div>
-            <a href="{% url 'authentication:profile' %}" class="btn-kembali" title="Kembali">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" 
-                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
-                    stroke-linejoin="round" class="lucide lucide-arrow-left preview-icon">
-                    <path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>
-                </svg>
-                
-                <span class="nav-label">Kembali</span>
-            </a>
-        </div>
     </aside>
 
     <!-- Konten utama -->
     <main class="profile-main-content">
-        <form method="POST" class="profile-card">
+        <form method="POST" enctype="multipart/form-data" class="profile-card">
             {% csrf_token %}
 
             <h2 class="profile-title">Profile Account</h2>
 
             <div class="profile-card-body">
 
-                <div class="profile-avatar-container">
+                <!-- Avatar -->
+                <div class="profile-avatar-container"> 
                     <div class="avatar-circle">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" 
-                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
-                            stroke-linejoin="round" class="lucide lucide-user-round preview-icon">
-                                    
-                            <circle cx="12" cy="8" r="5"/>
-                            <path d="M20 21a8 8 0 0 0-16 0"/>
-                        </svg>
+                        {% if user.photo %}
+                            <img src="{{ user.photo.url }}" alt="Foto profil" class="avatar-img">
+                        {% else %}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="lucide lucide-user-round preview-icon">
+                                <circle cx="12" cy="8" r="5"/>
+                                <path d="M20 21a8 8 0 0 0-16 0"/>
+                            </svg>
+                        {% endif %}
                     </div>
                 </div>
+
 
                 <div class="profile-form-details">
 

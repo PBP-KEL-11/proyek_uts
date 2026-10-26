@@ -38,10 +38,11 @@ def login_user(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-
+            response = redirect("main:show_main")
+            response.set_cookie('last_login', datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
             messages.success(request, 'Login berhasil!')
 
-            return redirect('main:show_main')
+            return response
         
     else:
         form = AuthenticationForm(request)
@@ -62,7 +63,7 @@ def profile(request):
 def edit_profile(request):
 
     if request.method == 'POST':
-        form = EditProfileForm(request.POST, instance=request.user)
+        form = EditProfileForm(request.POST, request.FILES, instance=request.user)
 
         if form.is_valid():
             form.save()
@@ -82,4 +83,5 @@ def edit_profile(request):
 def logout_user(request):
     logout(request)
     response = redirect('main:show_main')
+    response.delete_cookie("last_login")
     return response

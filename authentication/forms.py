@@ -4,6 +4,8 @@ from .models import User
 from django.contrib.auth.forms import UserCreationForm
 from phonenumber_field.formfields import SplitPhoneNumberField
 
+MAX_IMAGE_MB = 2
+
 class RegisterForm(UserCreationForm):
 
     full_name = forms.CharField(
@@ -57,6 +59,7 @@ class EditProfileForm(ModelForm):
             'email',
             'first_name',
             'last_name',
+            'photo'
         ]
 
         labels = {
@@ -64,3 +67,17 @@ class EditProfileForm(ModelForm):
             'first_name': 'First Name',
             'last_name': 'Last Name',
         }
+
+        widgets = {
+            'photo': forms.ClearableFileInput(attrs={'accept': 'image/png, image/jpeg'}),
+        }
+
+    def clean_photo(self):
+            photo = self.cleaned_data.get('photo')
+            # Validasi hanya untuk file yang baru diunggah
+            if photo and hasattr(photo, 'content_type'):
+                if photo.content_type not in ('image/jpeg', 'image/png'):
+                    raise forms.ValidationError('Format harus JPG atau PNG.')
+                if photo.size > MAX_IMAGE_MB * 1024 * 1024:
+                    raise forms.ValidationError(f'Ukuran foto maksimal {MAX_IMAGE_MB} MB.')
+            return photo
