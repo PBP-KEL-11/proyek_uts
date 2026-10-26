@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Tanamin{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'authentication/css/style.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+{# Sprite daun dekoratif #}
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="leaf-cluster" viewBox="-30 -30 60 60">
+        <defs>
+            <g id="leaf">
+                <path d="M0 0C6-9 20-9 28 0C20 9 6 9 0 0Z" fill="#cfe8d4"/>
+                <path d="M3 0H24" stroke="#25503b" stroke-width="1" fill="none"/>
+            </g>
+        </defs>
+        <use href="#leaf" transform="rotate(45)"/>
+        <use href="#leaf" transform="rotate(135)"/>
+        <use href="#leaf" transform="rotate(225)"/>
+        <use href="#leaf" transform="rotate(315)"/>
+    </symbol>
+</svg>
+
+{% if messages %}
+    {% for message in messages %}
+        <script>alert("{{ message|escapejs }}");</script>
+    {% endfor %}
+{% endif %}
+
+<div class="login-page">
+
+    <!-- Panel kiri (sama di semua halaman authentication) -->
+    <section class="login-visual">
+
+        <div class="visual-top">
+            <a href="{% url 'main:show_main' %}" class="btn-beranda">
+                <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+                Kembali ke Beranda
+            </a>
+        </div>
+
+        {% block visual_text %}
+        <div class="visual-text">
+            <p class="visual-lead">Terima kasih telah memilih Tanamin.</p>
+            <p>Kami akan membimbing langkah pertamamu menuju rimbun dan cantiknya hijau dedaunan yang tumbuh dari setiap tanaman yang kamu rawat.</p>
+            <p>Semoga perjalanannya menyenangkan.</p>
+            <br>
+            <p class="visual-sign">
+                <span>Salam Hangat,</span>
+                <span>Tanamin</span>
+            </p>
+        </div>
+        {% endblock visual_text %}
+
+        <svg class="leaf leaf-tr1" aria-hidden="true"><use href="#leaf-cluster"/></svg>
+        <svg class="leaf leaf-tr2" aria-hidden="true"><use href="#leaf-cluster"/></svg>
+        <svg class="leaf leaf-tr3" aria-hidden="true"><use href="#leaf-cluster"/></svg>
+        <svg class="leaf leaf-bl1" aria-hidden="true"><use href="#leaf-cluster"/></svg>
+        <svg class="leaf leaf-bl2" aria-hidden="true"><use href="#leaf-cluster"/></svg>
+        <svg class="leaf leaf-bl3" aria-hidden="true"><use href="#leaf-cluster"/></svg>
+    </section>
+
+    <!-- Panel kanan (isi berbeda tiap halaman) -->
+    <section class="login-panel">
+
+        <div class="login-card">
+            <h1 class="login-title">{% block heading %}{% endblock %}</h1>
+            {% block card_content %}{% endblock %}
+        </div>
+
+        {% block below_card %}{% endblock %}
+
+    </section>
+</div>
+
+{% block extra_js %}{% endblock %}
+</body>
+</html>

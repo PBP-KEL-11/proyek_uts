@@ -1,0 +1,572 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700&family=Poppins:ital,wght@0,600;0,700;1,200;1,300;1,600;1,700&display=swap');
+
+/* ================================================================ */
+/* ======================= Reset & Variabel ======================= */
+/* ================================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* palet utama (nama sama dengan css/main/style.css) */
+    --primary:    #347338;
+    --secondary:  #A5BF99;
+    --tertiary:   #134023;
+    --neutral:    #11261A;
+    --background: #E9FFED;
+    --white:      #FFFFFF;
+    --danger:     #dc3545;
+
+    /* hijau tambahan */
+    --green-sidebar: #1b4332;   /* sidebar & judul halaman profile */
+    --green-panel:   #25503b;   /* panel kiri login, hover tombol */
+    --green-button:  #2f6b3a;   /* tombol utama */
+    --green-title:   #2a5f33;   /* judul kartu login */
+    --green-light:   #cfe8d4;   /* tombol "Kembali ke Beranda" */
+    --green-lighter: #e2f4e6;   /* hover tombol "Kembali ke Beranda" */
+
+    /* latar */
+    --bg-profile: #e8f5e9;
+    --bg-auth:    #e6fcea;
+    --bg-card:    #eefff1;
+    --bg-field:   #f8f9fa;
+
+    /* teks & garis */
+    --text-body:    #3d5545;
+    --text-dark:    #333;
+    --text-muted:   #555;
+    --text-hint:    #777;
+    --placeholder:  #B8BEB9;
+    --border-light: #eee;
+
+    /* putih transparan di atas latar gelap */
+    --white-15: rgba(255, 255, 255, 0.15);
+    --white-20: rgba(255, 255, 255, 0.2);
+    --white-25: rgba(255, 255, 255, 0.25);
+
+    /* bayangan */
+    --shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --shadow-auth: 0 2px 10px rgba(17, 38, 26, 0.18);
+}
+
+body {
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--neutral);
+    background-color: var(--background);
+    line-height: 1.6;
+}
+
+
+/* ================================================================ */
+/* ==================== Komponen bersama ========================== */
+/* ================================================================ */
+
+.icon    { width: 22px; height: 22px; flex-shrink: 0; }
+.icon-sm { width: 16px; height: 16px; }
+.nav-icon { display: inline-flex; }
+
+.form-error {
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--danger);
+}
+
+.form-error ul { list-style: none; }
+
+
+/* ================================================================ */
+/* ==================== Halaman Profile Tanamin =================== */
+/* ================================================================ */
+
+.profile-layout-wrapper {
+    display: flex;
+    min-height: 100vh;
+    min-height: 100dvh;   /* untuk HP: memperhitungkan address bar yang muncul/hilang */
+}
+
+/* ---------- Sidebar ---------- */
+.profile-sidebar {
+    width: 270px;
+    flex-shrink: 0;
+    background-color: var(--green-sidebar);
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 24px;
+    transition: width 0.25s ease, padding 0.25s ease;
+}
+
+.sidebar-user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--white-20);
+}
+
+.sidebar-user-text { min-width: 0; }
+
+.sidebar-username {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.sidebar-email {
+    font-size: 12px;
+    opacity: 0.8;
+    overflow-wrap: anywhere;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sidebar-nav a {
+    color: var(--white);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.sidebar-nav a:hover  { background-color: var(--white-15); }
+.sidebar-nav a.active { background-color: var(--white-25); }   /* menu yang lagi dibuka */
+
+.btn-kembali {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--white-15);
+    color: var(--white);
+    padding: 10px 20px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.btn-kembali:hover { background-color: var(--white-25); }
+
+/* ---------- Konten utama ---------- */
+.profile-main-content {
+    flex: 1;
+    min-width: 0;                         /* cegah konten mendorong lebar halaman */
+    background-color: var(--bg-profile);
+    padding: clamp(16px, 4vw, 40px);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.profile-card {
+    background-color: var(--white);
+    border-radius: 24px;
+    padding: clamp(20px, 4vw, 40px);
+    width: 100%;
+    max-width: 700px;
+    box-shadow: var(--shadow-soft);
+}
+
+.profile-title {
+    font-size: clamp(22px, 4vw, 28px);
+    font-weight: bold;
+    color: var(--green-sidebar);
+    margin-bottom: 24px;
+}
+
+.profile-card-body {
+    display: flex;
+    gap: clamp(20px, 4vw, 40px);
+    align-items: flex-start;              /* atas lingkaran sejajar dg label Username */
+}
+
+.profile-avatar-container {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.avatar-circle {
+    width: clamp(100px, 18vw, 140px);
+    height: clamp(100px, 18vw, 140px);
+    border: 2px solid var(--text-dark);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-form-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.form-group-profile { margin-bottom: 16px; }
+.form-group-profile.mb-large { margin-bottom: 24px; }
+
+.form-group-profile label {
+    display: block;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+}
+
+.form-value-box {
+    background-color: var(--bg-field);
+    padding: 10px 14px;
+    border-radius: 8px;
+    color: var(--text-dark);
+    border: 1px solid var(--border-light);
+    overflow-wrap: anywhere;
+}
+
+/* ---------- <= 900px: sidebar mengecil jadi rel ikon ---------- */
+@media (max-width: 900px) {
+    .profile-sidebar {
+        width: 72px;
+        padding: 20px 10px;
+        align-items: center;
+    }
+
+    .sidebar-top { width: 100%; }
+
+    .sidebar-user-text,
+    .nav-label { display: none; }         /* teks disembunyiin, ikon tetap */
+
+    .sidebar-user-info {
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .sidebar-nav a {
+        justify-content: center;
+        padding: 12px 0;
+    }
+
+    .btn-kembali {
+        padding: 10px 14px;
+        gap: 0;
+    }
+}
+
+/* ---------- <= 560px: foto profil pindah ke atas data ---------- */
+@media (max-width: 560px) {
+    .profile-card-body {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .profile-form-details { width: 100%; }
+
+    .profile-actions { flex-direction: column; }
+
+    .btn-simpan { justify-content: center; }
+}
+
+
+/* ================================================================ */
+/* ================= Halaman Edit Profile Tanamin ================= */
+/* ================================================================ */
+
+.form-group-profile input,
+.form-group-profile select,
+.form-group-profile textarea {
+    width: 100%;
+    background-color: var(--bg-field);
+    padding: 10px 14px;
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 16px;
+    color: var(--text-dark);
+    outline: none;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.form-group-profile input:focus,
+.form-group-profile select:focus,
+.form-group-profile textarea:focus {
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 2px var(--secondary);
+}
+
+.form-help {
+    display: block;
+    margin-top: 4px;
+    font-size: 11px;
+    color: var(--text-hint);
+}
+
+.profile-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+/* tombol Simpan di kanan bawah */
+.actions-end { justify-content: flex-end; }
+
+.btn-simpan {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    border: none;
+    border-radius: 8px;
+    background-color: var(--green-button);
+    color: var(--white);
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-simpan:hover { background-color: var(--green-panel); }
+
+
+/* ================================================================ */
+/* ============ Login, Register & Reset Password (auth) =========== */
+/* ================================================================ */
+
+.login-page {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+    min-height: 100dvh;
+}
+
+/* ---------- Panel kiri ---------- */
+.login-visual {
+    position: relative;
+    background-color: var(--green-panel);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 28px 24px 40px;
+    overflow: hidden;
+}
+
+/* lebar kolom isi panel kiri (dipakai bersama tombol dan teks) */
+.visual-top,
+.visual-text {
+    width: min(420px, 78%);
+}
+
+.visual-top {
+    position: relative;
+    z-index: 5;
+}
+
+.btn-beranda {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 16px;
+    background: var(--green-light);
+    color: var(--green-panel);
+    border-radius: 999px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.btn-beranda:hover { background: var(--green-lighter); }
+
+/* ---------- pesan dari mimin Tanamin ---------- */
+.visual-text {
+    margin-top: clamp(32px, 9vh, 72px);
+    color: var(--bg-auth);
+    font-family: 'Poppins', sans-serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(15px, 1.5vw, 18px);
+    line-height: 1.65;
+    position: relative;
+    z-index: 5;
+}
+
+.visual-text p {
+    margin-bottom: 22px;
+    font-weight: 200;
+}
+
+.visual-text .visual-lead {
+    font-weight: 700;
+    font-size: clamp(16px, 1.6vw, 19px);
+}
+
+.visual-sign {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-left: 45%;                 /* menjorok ke kanan */
+}
+
+/* ---------- Hiasan daun ---------- */
+.leaf {
+    position: absolute;
+    width: 46px;
+    height: 46px;
+    pointer-events: none;
+}
+
+.leaf-tr1 { top: 10px;  right: 62px; }
+.leaf-tr2 { top: 6px;   right: 12px; }
+.leaf-tr3 { top: 52px;  right: 14px; }
+.leaf-bl1 { left: 14px; bottom: 56px; }
+.leaf-bl2 { left: 10px; bottom: 10px; }
+.leaf-bl3 { left: 56px; bottom: 8px; }
+
+/* ---------- Panel kanan ---------- */
+.login-panel {
+    background-color: var(--bg-auth);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 22px;
+    padding: 32px 24px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 440px;
+    background: var(--bg-card);
+    border-radius: 24px;
+    box-shadow: var(--shadow-auth);
+    padding: 36px 36px 32px;
+}
+
+.login-title {
+    margin: 0 0 28px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: clamp(24px, 3vw, 30px);
+    color: var(--green-title);
+    text-align: center;
+}
+
+/* ---------- Form ---------- */
+.auth-field { margin-bottom: 14px; }
+
+.auth-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--neutral);
+}
+
+.auth-form input {
+    width: 100%;
+    height: 38px;
+    padding: 0 12px;
+    border: none;
+    border-radius: 6px;
+    background: var(--white);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14px;
+    color: var(--neutral);
+    outline: none;
+    transition: box-shadow 0.2s ease;
+}
+
+.auth-form input::placeholder { color: var(--placeholder); }
+.auth-form input:focus        { box-shadow: 0 0 0 2px var(--secondary); }
+
+/* tombol submit (login/register) dan tombol berbentuk link (halaman reset) */
+.btn-login-submit,
+.btn-auth-link {
+    display: block;
+    width: 100%;
+    height: 38px;
+    border: none;
+    border-radius: 8px;
+    background: var(--green-button);
+    color: var(--white);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 38px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-login-submit { margin-top: 10px; }
+
+.btn-login-submit:hover,
+.btn-auth-link:hover { background: var(--green-panel); }
+
+/* ---------- Link & teks di bawah form ---------- */
+.link-forgot {
+    display: inline-block;
+    margin-top: 22px;
+    font-size: 12px;
+    color: var(--neutral);
+    text-decoration: underline;
+}
+
+.link-forgot:hover { color: var(--primary); }
+
+.login-register {
+    width: 100%;
+    max-width: 440px;
+    padding-inline: 36px;
+    font-size: 13px;
+    color: var(--neutral);
+}
+
+.login-register a {
+    margin-left: 14px;
+    color: var(--neutral);
+    text-decoration: underline;
+}
+
+.login-register a:hover { color: var(--primary); }
+
+.auth-text {
+    margin-bottom: 20px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text-body);
+    text-align: center;
+}
+
+/* ---------- <= 820px: panel kiri jdi bar tipis di atas ---------- */
+@media (max-width: 820px) {
+    .login-page {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+    }
+
+    .login-visual { padding: 16px 20px; }
+    .visual-top   { width: 100%; }
+
+    .visual-text,
+    .leaf { display: none; }
+
+    .login-panel {
+        justify-content: flex-start;
+        padding: 28px 16px 48px;
+    }
+
+    .login-card { padding: 28px 22px 26px; }
+    .login-register { padding-inline: 22px; }
+}

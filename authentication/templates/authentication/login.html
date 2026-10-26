@@ -1,49 +1,21 @@
-{% load static %}
+{% extends 'authentication/base_authentication.html' %}
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Login - Tanamin</title>
-    <link rel="stylesheet" href="{% static 'authentication/style.css' %}">
-</head>
+{% block title %}Login | Tanamin{% endblock %}
+{% block heading %}Masuk Akun{% endblock %}
 
-<body>
+{% block card_content %}
+    <form method="POST" class="auth-form">
+        {% csrf_token %}
+        {% include 'authentication/_form_fields.html' %}
+        <button type="submit" class="btn-login-submit">Login</button>
+    </form>
 
-<h1>Login</h1>
+    <a href="{% url 'password_reset' %}" class="link-forgot">Forgot Password?</a>
+{% endblock %}
 
-{% if messages %}
-    {% for message in messages %}
-        <script>
-            alert("{{ message }}");
-        </script>
-    {% endfor %}
-{% endif %}
-
-<form method="POST">
-    {% csrf_token %}
-
-    {{ form.as_p }}
-
-    <button type="submit">
-        Login
-    </button>
-</form>
-
-
-<div class="login-links">
-
-    <a href="{% url 'password_reset' %}">
-        Forgot Password?
-    </a>
-
-    <p>
-        Don't have an account yet?
-        <a href="{% url 'authentication:register' %}">
-            Register
-        </a>
+{% block below_card %}
+    <p class="login-register">
+        Belum memiliki akun?
+        <a href="{% url 'authentication:register' %}">Register</a>
     </p>
-
-</div>
-
-</body>
-</html>
+{% endblock %}

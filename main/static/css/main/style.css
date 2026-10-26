@@ -48,8 +48,9 @@ body {
 }
 
 .brand {
-    font-family: 'Jaro', sans-serif;
+    font-family: 'Poppins', sans-serif;
     font-size: 32px;
+    font-weight: 700;
     color: var(--tertiary);
     text-decoration: none;
     letter-spacing: 0.5px;

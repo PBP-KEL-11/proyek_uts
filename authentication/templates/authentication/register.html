@@ -1,37 +1,19 @@
-{% load static %}
+{% extends 'authentication/base_authentication.html' %}
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Register - Tanamin</title>
-    <link rel="stylesheet" href="{% static 'authentication/style.css' %}">
-</head>
+{% block title %}Register | Tanamin{% endblock %}
+{% block heading %}Daftar Akun{% endblock %}
 
-<body>
+{% block card_content %}
+    <form method="POST" class="auth-form">
+        {% csrf_token %}
+        {% include 'authentication/_form_fields.html' %}
+        <button type="submit" class="btn-login-submit">Register</button>
+    </form>
+{% endblock %}
 
-<form method="POST">
-
-    {% csrf_token %}
-
-    <!-- Judul di dalam box -->
-    <h1>Daftar Akun</h1>
-
-    {{ form.as_p }}
-
-    <button type="submit">
-        Register
-    </button>
-
-</form>
-
-<div class="login-links">
-    <p class="login-link">
+{% block below_card %}
+    <p class="login-register">
         Sudah memiliki akun?
-        <a href="{% url 'authentication:login_user' %}">
-            Login
-        </a>
+        <a href="{% url 'authentication:login_user' %}">Login</a>
     </p>
-</div>
-
-</body>
-</html>
+{% endblock %}

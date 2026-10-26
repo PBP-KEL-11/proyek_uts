@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Tanamin{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'css/main/style.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="container">
+
+            <a href="{% url 'main:show_main' %}" class="brand">Tanamin</a>
+
+            <nav class="nav-menu">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'main:show_main' %}">Beranda</a>
+                    <a href="{% url 'notes:index' %}">Jurnal</a>
+                    <a href="{% url 'schedules:index' %}">Schedule</a>
+                    <a href="{% url 'plants:index' %}">Plants</a>
+                    <a href="{% url 'dashboard:index' %}">Dashboard</a>
+
+                    <a href="{% url 'authentication:profile' %}" class="btn-login">Profile</a>
+                    <a href="{% url 'authentication:logout_user' %}" class="btn-register">Logout</a>
+                {% else %}
+                    <a href="{% url 'authentication:login_user' %}" class="btn-login">Login</a>
+                    <a href="{% url 'authentication:register' %}" class="btn-register">Register</a>
+                {% endif %}
+            </nav>
+
+        </div>
+    </header>
+
+    {% if messages %}
+        {% for message in messages %}
+            <script>alert("{{ message|escapejs }}");</script>
+        {% endfor %}
+    {% endif %}
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <p>© 2026 Tanamin. Grow better, together.</p>
+    </footer>
+
+    <script src="{% static 'js/main/script.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
