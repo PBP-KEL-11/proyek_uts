@@ -1,21 +1,23 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, JsonResponse
 from dashboard.models import GreenTrack
-from authentication.models import User
+from django.contrib.auth.decorators import login_required
+from django.db.models import Prefetch
+from django.views.decorators.http import require_POST
+from django.utils import timezone
+
+from plants.models import GardenPlant
+from notes.models import Note
 # Create your views here.
 
-
-def show_green_track_test(request):
-    context = {"title":"Green Track Test"}
-    return render(request, "test.html", context)
 
 def show_admin_greentrack_cards(request):
     query = request.GET.get("title", "").strip()
     context = {
-        "title":"Admin Dashboard",
+        "title":"Dashboard Admin",
         "query":query
     }
-    return render(request, "admin_dashboard.html", context)
+    return render(request, "dashboard/admin_dashboard.html", context)
 
 
 def get_greentrack_json(request):
@@ -44,9 +46,10 @@ def get_greentrack_json(request):
 def show_admin_greentrack_details(request, id):
     greentrack = get_object_or_404(GreenTrack, pk = id)
     context = {
+        "title":"Detail Pengguna",
         "greentrack":greentrack
     }
-    return render(request, "admin_green_track_detail.html", context)
+    return render(request, "dashboard/admin_green_track_detail.html", context)
 
 def show_user_greentrack_details(request, id):
     greentrack = get_object_or_404(GreenTrack, pk=id)
@@ -55,5 +58,76 @@ def show_user_greentrack_details(request, id):
     }
     return render(request, "green_track.html", context)
 
-def show_greentrack_component(request):
-    return render(request, "green_track_card.html")
+
+@login_required
+def index(request):
+    """Menampilkan kebun milik user dan 3 jurnal terbaru per tanaman."""
+
+    garden_plants = (
+        GardenPlant.objects
+        .filter(user=request.user)
+        .select_related("plant")
+        .prefetch_related(
+            Prefetch(
+                "journal_entries",
+                queryset=Note.objects.order_by("-created_at")[:3],
+                to_attr="recent_notes",
+            )
+        )
+    )
+
+    return render(
+        request,
+        "dashboard/index.html",
+        {
+            "garden_plants": garden_plants,
+            "total_plants": garden_plants.count(),
+        },
+    )
+
+
+@login_required
+def plant_detail(request, plant_id):
+    """Menampilkan detail tanaman dan semua jurnalnya."""
+
+    garden_plant = get_object_or_404(
+        GardenPlant.objects.select_related("plant"),
+        pk=plant_id,
+        user=request.user,
+    )
+
+    journals = garden_plant.journal_entries.all()
+
+    return render(
+        request,
+        "dashboard/plant_detail.html",
+        {
+            "garden_plant": garden_plant,
+            "journals": journals,
+        },
+    )
+
+
+@login_required
+@require_POST
+def mark_watered(request, plant_id):
+    """Mencatat bahwa tanaman sudah disiram."""
+
+    garden_plant = get_object_or_404(
+        GardenPlant,
+        pk=plant_id,
+        user=request.user,
+    )
+
+    garden_plant.last_watered = timezone.now()
+    garden_plant.save(update_fields=["last_watered"])
+
+    return JsonResponse({
+        "success": True,
+        "message": (
+            f"{garden_plant.plant.common_name} berhasil disiram!"
+        ),
+        "last_watered": timezone.localtime(
+            garden_plant.last_watered
+        ).strftime("%d %b %Y, %H:%M"),
+    })

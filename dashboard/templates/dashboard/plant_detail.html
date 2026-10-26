@@ -1,0 +1,157 @@
+
+{% extends "notes/base_notes.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="plant-detail-header">
+        <a href="{% url 'dashboard:index' %}" class="back-link">
+            &larr; Kembali ke Dashboard
+        </a>
+
+        <div class="plant-info">
+            {% if garden_plant.plant.thumbnail %}
+                <img
+                    src="{{ garden_plant.plant.thumbnail }}"
+                    alt="{{ garden_plant.plant.common_name }}"
+                    class="plant-image"
+                >
+            {% endif %}
+
+            <div>
+                <h1>
+                    {% if garden_plant.nickname %}
+                        {{ garden_plant.nickname }}
+                    {% else %}
+                        {{ garden_plant.plant.common_name }}
+                    {% endif %}
+                </h1>
+
+                {% if garden_plant.nickname %}
+                    <p>{{ garden_plant.plant.common_name }}</p>
+                {% endif %}
+
+                {% if garden_plant.plant.scientific_name %}
+                    <p><i>{{ garden_plant.plant.scientific_name }}</i></p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <section class="plant-care-card">
+        <h2>Informasi Perawatan</h2>
+
+        <div class="care-item">
+            <strong>Penyiraman</strong>
+            <p>
+                Setiap {{ garden_plant.plant.watering_days }} hari
+            </p>
+            {% if garden_plant.plant.watering %}
+                <p>{{ garden_plant.plant.watering }}</p>
+            {% endif %}
+        </div>
+
+        <div class="care-item">
+            <strong>Kebutuhan Cahaya</strong>
+            <p>
+                {{ garden_plant.plant.sunlight|default:"Belum ada informasi" }}
+            </p>
+        </div>
+
+        <div class="care-item">
+            <strong>Terakhir Disiram</strong>
+            <p>{{ garden_plant.last_watered|date:"d M Y, H:i" }}</p>
+        </div>
+
+        <div class="care-item">
+            <strong>Penyiraman Berikutnya</strong>
+            <p>{{ garden_plant.next_watering|date:"d M Y, H:i" }}</p>
+        </div>
+
+        {% if garden_plant.needs_water %}
+            <p class="watering-warning">
+                Tanaman ini sudah waktunya disiram!
+            </p>
+        {% endif %}
+
+        <form
+            method="post"
+            action="{% url 'dashboard:mark_watered' garden_plant.id %}"
+        >
+            {% csrf_token %}
+            <button type="submit" class="primary-btn">
+                Sudah Disiram
+            </button>
+        </form>
+    </section>
+
+    <section class="plant-notes-section">
+        <div class="section-header">
+            <h2>Jurnal Tanaman</h2>
+
+            <a
+                href="{% url 'notes:create' %}?garden_plant_id={{ garden_plant.id }}"
+                class="secondary-btn"
+            >
+                + Tambah Jurnal
+            </a>
+        </div>
+
+        {% if journals %}
+            <div class="journal-list">
+                {% for note in journals %}
+                    <article class="journal-card">
+                        {% if note.image %}
+                            <img
+                                src="{{ note.image.url }}"
+                                alt="{{ note.title }}"
+                                class="journal-image"
+                            >
+                        {% endif %}
+
+                        <div class="journal-content">
+                            <h3>{{ note.title }}</h3>
+
+                            <p>
+                                <strong>Status:</strong>
+                                {{ note.get_status_display }}
+                            </p>
+
+                            <p>
+                                <strong>Tanggal tanam:</strong>
+                                {{ note.planted_date|date:"d M Y" }}
+                            </p>
+
+                            {% if note.location %}
+                                <p>
+                                    <strong>Lokasi:</strong>
+                                    {{ note.location }}
+                                </p>
+                            {% endif %}
+
+                            {% if note.content %}
+                                <p>{{ note.content|truncatewords:30 }}</p>
+                            {% endif %}
+
+                            <p class="journal-date">
+                                Dibuat {{ note.created_at|date:"d M Y, H:i" }}
+                            </p>
+
+                            <a href="{% url 'notes:edit' note.pk %}">
+                                Edit jurnal
+                            </a>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <h3>Belum ada jurnal</h3>
+                <p>
+                    Catat perkembangan tanamanmu agar perawatannya
+                    lebih mudah dipantau.
+                </p>
+            </div>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}
