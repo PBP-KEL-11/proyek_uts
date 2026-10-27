@@ -111,9 +111,9 @@ img { max-width: 100%; }
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 34px;
-    height: 34px;
-    border: 1.5px solid var(--primary);
+    width: 35px;
+    height: 35px;
+    border: 1px solid var(--primary);
     border-radius: 50%;
     color: var(--primary);
     flex-shrink: 0;

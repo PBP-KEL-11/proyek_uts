@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
     <title>{% block title %}Tanamin{% endblock %}</title>
 
     <link rel="stylesheet" href="{% static 'css/main/style.css' %}">
@@ -27,23 +28,23 @@
                     <a href="{% url 'authentication:profile' %}" class="user-chip" title="Lihat profil">
                         {% if user.photo %}
                             <div class="avatar-circle">
-                                    <img src="{{ user.photo.url }}" alt="Foto profil" class="avatar-img">
+                                <img src="{{ user.photo.url }}" alt="Foto profil" class="avatar-img">
                             </div>
                         {% else %}
                             <span class="user-icon">
-                                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" 
+                                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor"
                                     stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                     <path d="M17.925 20.056a6 6 0 0 0-11.851.001"/><circle cx="12" cy="11" r="4"/>
                                     <circle cx="12" cy="12" r="10"/></svg>
                             </span>
                         {% endif %}
-                        
+
                         <span class="user-text">
                             <strong>{{ user.username }}</strong>
                         </span>
                     </a>
 
-                    <a href="{% url 'authentication:logout_user' %}" class="btn-register">Logout</a>
+                    <a href="{% url 'authentication:logout_user' %}" class="btn-register" data-logout>Logout</a>
                 {% else %}
                     <a href="{% url 'authentication:login_user' %}" class="btn-login">Login</a>
                     <a href="{% url 'authentication:register' %}" class="btn-register">Register</a>
@@ -67,7 +68,27 @@
         <p>© 2026 Tanamin. Grow better, together.</p>
     </footer>
 
-    <script src="{% static 'js/main/script.js' %}"></script>
+
+    <script>
+    document.querySelectorAll("[data-logout]").forEach(link => {
+        link.addEventListener("click", async (e) => {
+            e.preventDefault();
+            const token = document.querySelector('meta[name="csrf-token"]').content;
+
+            try {
+                const res = await fetch(link.href, {
+                    method: "POST",
+                    headers: { "X-CSRFToken": token, "X-Requested-With": "XMLHttpRequest" }
+                });
+                const data = await res.json();
+                window.location.href = data.redirect_url;
+            } catch (err) {
+                window.location.href = link.href;     // cadangan: logout biasa lewat GET
+            }
+        });
+    });
+    </script>
+
     {% block extra_js %}{% endblock %}
 </body>
 </html>

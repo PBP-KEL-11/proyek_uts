@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Profile | Tanamin{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'authentication/css/style.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="n-body">
+
+<div class="profile-layout-wrapper">
+
+    {% block sidebar %}
+    <aside class="profile-sidebar">
+
+        <div class="sidebar-back">
+            <a href="{% url 'main:show_main' %}" class="btn-kembali" title="Kembali">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" class="lucide lucide-arrow-left preview-icon">
+                    <path d="m12 19-7-7 7-7"/><path d="M19 12H5"/>
+                </svg>
+                <span class="nav-label">Kembali</span>
+            </a>
+        </div>
+        <br>
+        <div class="sidebar-top">
+            <div class="sidebar-user-info">
+                {% if user.photo %}
+                    <div class="avatar-circle-sidebar">
+                        <img src="{{ user.photo.url }}" alt="Foto profil" class="avatar-img">
+                    </div>
+                {% else %}
+                    <div class="user-avatar-placeholder">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" class="lucide lucide-circle-user-round preview-icon">
+                            <path d="M17.925 20.056a6 6 0 0 0-11.851.001"/>
+                            <circle cx="12" cy="11" r="4"/><circle cx="12" cy="12" r="10"/>
+                        </svg>
+                    </div>
+                {% endif %}
+                <div class="sidebar-user-text">
+                    <div class="sidebar-username">{{ user.username }}</div>
+                    <div class="sidebar-email">{{ user.email|default:"-" }}</div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="{% url 'authentication:edit_profile' %}"
+                   class="{% if request.resolver_match.url_name == 'edit_profile' %}active{% endif %}"
+                   title="Edit Profile">
+                    <span class="nav-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" class="lucide lucide-square-pen preview-icon">
+                            <path d="M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                            <path d="M18.375 2.625a1 1 0 0 1 3 3l-9.013 9.014a2 2 0 0 1-.853.505l-2.873.84a.5.5 0 0 1-.62-.62l.84-2.873a2 2 0 0 1 .506-.852z"/>
+                        </svg>
+                    </span>
+                    <span class="nav-label">Edit Profile</span>
+                </a>
+                <a href="{% url 'plants:index' %}" title="Tanaman Saya">
+                    <span class="nav-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" class="lucide lucide-plant-pot preview-icon">
+                            <path d="M14 8.536V6a4 4 0 014-4h1.5a.5.5 0 01.5.5V4a4 4 0 01-4 4 4 4 0 00-4 4 5 5 0 01-8-4 5 5 0 018 4c0 2 1 3 1 5"/>
+                            <path d="m18 17-1.085 3.58A2 2 0 0115 22H9.002a2 2 0 01-1.913-1.418L6 17"/>
+                            <path d="M5 17h14"/>
+                        </svg>
+                    </span>
+                    <span class="nav-label">Tanaman Saya</span>
+                </a>
+                <a href="{% url 'schedules:index' %}" title="Lihat Jadwal">
+                    <span class="nav-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                             stroke-linejoin="round" class="lucide lucide-calendar-days preview-icon">
+                             <path d="M8 2v3"/><path d="M16 2v3"/><rect x="3" y="3" width="18" height="18" rx="2"/>
+                             <path d="M3 9h18"/><path d="M8 13h.01"/><path d="M12 13h.01"/>
+                             <path d="M16 13h.01"/><path d="M8 17h.01"/><path d="M12 17h.01"/><path d="M16 17h.01"/>
+                        </svg>
+                    </span>
+                    <span class="nav-label">Lihat Jadwal</span>
+                </a>
+            </nav>
+        </div>
+
+    </aside>
+    {% endblock sidebar %}
+
+    <main class="profile-main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+</div>
+
+{% block extra_js %}{% endblock %}
+</body>
+</html>
