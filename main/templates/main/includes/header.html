@@ -1,0 +1,60 @@
+<header class="site-header">
+    <nav class="navbar navbar-expand-md">
+        <div class="container">
+
+            <a class="navbar-brand brand" href="{% url 'main:show_main' %}">Tanamin</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#mainNav" aria-controls="mainNav"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav ms-auto align-items-md-center gap-md-3">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'main:show_main' %}">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'notes:index' %}">Journal</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'schedules:index' %}">Schedule</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'plants:index' %}">Plants</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'dashboard:index' %}">Dashboard</a></li>
+
+                        <li class="nav-item">
+                            <a class="nav-link user-chip d-flex align-items-center gap-2"
+                               href="{% url 'authentication:profile' %}" title="Lihat profil">
+                                {% if user.photo %}
+                                    <div class="avatar-circle">
+                                        <img src="{{ user.photo.url }}" alt="Foto profil" class="avatar-img">
+                                    </div>
+                                {% else %}
+                                    <span class="user-icon">
+                                        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor"
+                                            stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                            <path d="M17.925 20.056a6 6 0 0 0-11.851.001"/><circle cx="12" cy="11" r="4"/>
+                                            <circle cx="12" cy="12" r="10"/></svg>
+                                    </span>
+                                {% endif %}
+                                <strong class="small">{{ user.username }}</strong>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="btn btn-success btn-sm rounded-pill px-3"
+                               href="{% url 'authentication:logout_user' %}" data-logout>Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="btn btn-outline-success btn-sm rounded-pill px-3"
+                               href="{% url 'authentication:login_user' %}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-success btn-sm rounded-pill px-3"
+                               href="{% url 'authentication:register' %}">Register</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+
+        </div>
+    </nav>
+</header>
