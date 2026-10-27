@@ -206,18 +206,18 @@
     grid-template-columns: 0.3fr 1fr;
     grid-template-areas: 
     "image" "username-level-xp"
-    "image" "badge" ;
+    "description" "badge" ;
     gap: 0rem 0rem;
 }
 
 .greentrack-details-image{
     grid-area: "image";
-    width: 400px;
-    height: 500px;
+    width: 300px;
+    height: 300px;
     border: 3px solid var(--neutral);
     border-radius: 5px;
     align-items: center;
-    margin-left: 50px;
+    margin-left: 80px;
     margin-top: 20px;
 }
 
@@ -265,7 +265,7 @@
     border-radius: 4px;
     height: 225px;
     width: 400px;
-    margin-left: 260px;
+    margin-left: 290px;
     font-size: 25px;
 }
 

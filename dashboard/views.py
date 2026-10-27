@@ -8,6 +8,7 @@ from django.utils import timezone
 
 from plants.models import GardenPlant
 from notes.models import Note
+from dashboard.forms import GreenTrackForm
 # Create your views here.
 
 def show_base(request):
@@ -35,7 +36,7 @@ def get_greentrack_json(request):
         greentrack_data.append({
             "pk":str(greentrack.user.id),
             "fields": {
-                "username":greentrack.user,
+                "username":str(greentrack.user),
                 "current_xp":greentrack.current_xp,
                 "xp_max":greentrack.xp_max,
                 "active_badge":greentrack.active_badge,
@@ -52,15 +53,16 @@ def show_admin_greentrack_details(request, id):
         "title":"Detail Pengguna",
         "greentrack":greentrack
     }
-    return render(request, "dashboard/admin_green_track_detail.html", context)
+    return render(request, "dashboard/admin_greentrack_detail.html", context)
 
-def show_user_greentrack_details(request, id):
-    greentrack = get_object_or_404(GreenTrack, pk=id)
-    context = {
-        "greentrack":greentrack
-    }
-    return render(request, "green_track.html", context)
-
+def index(request):
+    try:
+        greentrack = GreenTrack.objects.get(pk=request.user.id)
+        context = {"greentrack":greentrack}
+        return render(request, "index.html", context)
+    except GreenTrack.DoesNotExist:
+        return redirect("dashboard/create_greentrack.html")
+    
 
 def show_admin_gardenplants_cards(request):
     query = request.GET.get("title", "").strip()
@@ -82,13 +84,14 @@ def get_gardenplants_json(request):
         garden_plants_data.append({
             "pk":str(garden_plant.user.id),
             "fields":{
-                "user":garden_plant.user,
-                "plant":garden_plant.plant,
+                "user":str(garden_plant.user),
+                "plant":str(garden_plant.plant),
                 "notes":garden_plant.notes,
                 "last_watered":garden_plant.last_watered,
                 "added_at":garden_plant.added_at,
             }
         })
+    return JsonResponse(garden_plants_data, safe=False)
 
 def show_admin_gardenplants_details(request, id):
     username=request.user
@@ -103,75 +106,25 @@ def show_admin_gardenplants_details(request, id):
     }
     return render(request, "dashboard/admin_user_detail.html", )
 
-@login_required
-def index(request):
-    """Menampilkan kebun milik user dan 3 jurnal terbaru per tanaman."""
-
-    garden_plants = (
-        GardenPlant.objects
-        .filter(user=request.user)
-        .select_related("plant")
-        .prefetch_related(
-            Prefetch(
-                "journal_entries",
-                queryset=Note.objects.order_by("-created_at")[:3],
-                to_attr="recent_notes",
-            )
-        )
-    )
-
-    return render(
-        request,
-        "dashboard/index.html",
-        {
-            "garden_plants": garden_plants,
-            "total_plants": garden_plants.count(),
-        },
-    )
-
-
-@login_required
-def plant_detail(request, plant_id):
-    """Menampilkan detail tanaman dan semua jurnalnya."""
-
-    garden_plant = get_object_or_404(
-        GardenPlant.objects.select_related("plant"),
-        pk=plant_id,
-        user=request.user,
-    )
-
-    journals = garden_plant.journal_entries.all()
-
-    return render(
-        request,
-        "dashboard/plant_detail.html",
-        {
-            "garden_plant": garden_plant,
-            "journals": journals,
-        },
-    )
-
-
-@login_required
 @require_POST
-def mark_watered(request, plant_id):
-    """Mencatat bahwa tanaman sudah disiram."""
+def create_greentrack_AJAX(request):
+    form = GreenTrackForm(request.POST)
+    if form.is_valid():
+        greentrack=form.save()
+        return JsonResponse({
+            "message":"Kamu Berhasil Mendaftarkan Diri ke Green Track!", "pk":str(greentrack.id)
+        }, status=201)
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
 
-    garden_plant = get_object_or_404(
-        GardenPlant,
-        pk=plant_id,
-        user=request.user,
-    )
+def update_greentrack(request, id):
+    greentrack = get_object_or_404(GreenTrack, pk=id)
+    form = GreenTrackForm(request.POST or None, instance=greentrack)
+    if form.is_valid():
+        form.save()
+        return redirect("dasboard:index")
+    context = {"form":form}
+    return render(request, "update_greentrack.html", form)   
 
-    garden_plant.last_watered = timezone.now()
-    garden_plant.save(update_fields=["last_watered"])
+def delete_greentrack(request, id):
+    greentrack = get_object_or_404(GreenTrack, pk=id) 
 
-    return JsonResponse({
-        "success": True,
-        "message": (
-            f"{garden_plant.plant.common_name} berhasil disiram!"
-        ),
-        "last_watered": timezone.localtime(
-            garden_plant.last_watered
-        ).strftime("%d %b %Y, %H:%M"),
-    })

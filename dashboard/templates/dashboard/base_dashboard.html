@@ -20,10 +20,11 @@
                     <a href="{% url 'notes:index' %}">Jurnal</a>
                     <a href="{% url 'schedules:index' %}">Schedule</a>
                     <a href="{% url 'plants:species_list' %}">Plants</a>
-                    <a href="{% url 'dashboard:index' %}">Dashboard</a>
                     {% if user.is_superuser %}
                         <a href="{% url 'dashboard:show_admin_greentrack_cards' %}">Pemain Green Track</a>
                         <a href="{% url 'dashboard:show_admin_users_cards' %}"> Tanaman Pengguna Tanamin</a>
+                        {% else %}
+                        <a href="{% url 'dashboard:index' %}">Dashboard</a>
                     {% endif %}
 
                     <a href="{% url 'authentication:profile' %}" class="btn-login">Profile</a>

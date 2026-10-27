@@ -54,10 +54,10 @@
             const cardElement = document.createElement('div');
 
             const fullCardHtml = `
-            <div class="card-container" onclick="location.href='/dashboard/admin-user-details/${greentrack_user}';" style="cursor:pointer;">
+            <div class="card-container" onclick="location.href='/dashboard/admin-user-details/${gardenplant_user}';" style="cursor:pointer;">
             <p class="profile-name"> ${gardenplant.user} </p>
-            <p class="profile-level-number"> Lvl ${gardenplant.plant}</p>
-            <p class="profile-level-name">${greentrack.added_at}</p>
+            <p class="profile-level-number"> ${gardenplant.plant}</p>
+            <p class="profile-level-name">${gardenplant.added_at}</p>
             </div>`;
 
             cardElement.innerHTML = fullCardHtml;
@@ -75,9 +75,9 @@
                     signal: abortController.signal,
                 });
 
-                const greentrack_data = await response.json();
+                const greenplant_data = await response.json();
                 gridContainer.innerHTML = '';
-                greentrack_data.forEach(data => {
+                greenplant_data.forEach(data => {
                     gridContainer.appendChild(buildCard(data))
                 });
             }

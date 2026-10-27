@@ -25,7 +25,7 @@ class GreenTrack(models.Model):
              2000,
              5000]
     
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, primary_key=True)
     personal_plant = models.OneToOneField(GardenPlant, on_delete=models.PROTECT, null=True)
     current_xp = models.IntegerField(default=0)
     xp_max = models.IntegerField(default=XPMAX[0])
@@ -34,5 +34,5 @@ class GreenTrack(models.Model):
     active_badge = models.CharField(default="Tidak Ada Badge Aktif")
     streak = models.IntegerField(default=0)
     carbon_absorption = models.FloatField(default=0.0)
-    greentrack_nickname = models.CharField(max_length=20)
-    greentrack_description = models.TextField()
+    greentrack_nickname = models.CharField(max_length=20, null=True)
+    greentrack_description = models.TextField(null=True)
