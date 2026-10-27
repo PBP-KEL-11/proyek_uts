@@ -1,10 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap');
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
 
 :root {
     --primary: #347338;
@@ -38,14 +33,6 @@ img { max-width: 100%; }
     box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
 }
 
-.site-header .container {
-    max-width: 1080px;
-    margin: 0 auto;
-    padding: 0 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
 
 .brand {
     font-family: 'Poppins', sans-serif;
@@ -55,11 +42,7 @@ img { max-width: 100%; }
     text-decoration: none;
 }
 
-.nav-menu {
-    display: flex;
-    align-items: center;
-    gap: 22px;
-}
+
 
 .nav-menu a {
     color: var(--neutral);
@@ -69,43 +52,9 @@ img { max-width: 100%; }
     transition: color 0.2s ease;
 }
 
-.nav-menu a:hover { color: var(--primary); }
 
-.nav-menu .btn-login {
-    padding: 5px 20px;
-    border: 1.5px solid var(--primary);
-    border-radius: 999px;
-    color: var(--primary);
-    background-color: transparent;
-    font-size: 12px;
-    transition: all 0.2s ease;
-}
 
-.nav-menu .btn-login:hover {
-    color: var(--white);
-    background-color: var(--primary);
-}
 
-.nav-menu .btn-register {
-    padding: 5px 20px;
-    border-radius: 999px;
-    color: var(--white);
-    background-color: var(--primary);
-    font-size: 12px;
-    transition: background-color 0.2s ease;
-}
-
-.nav-menu .btn-register:hover {
-    color: var(--white);
-    background-color: var(--tertiary);
-}
-
-/* chip user (ikon + nama + email) */
-.nav-menu .user-chip {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
 
 .user-icon {
     display: inline-flex;
@@ -474,16 +423,6 @@ img { max-width: 100%; }
 
 /* ---------- HP ---------- */
 @media (max-width: 768px) {
-    .site-header .container {
-        flex-direction: column;
-        gap: 12px;
-    }
-
-    .nav-menu {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 12px 16px;
-    }
 
     .about-grid { grid-template-columns: 110px 1fr; gap: 20px; }
 
