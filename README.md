@@ -50,4 +50,5 @@ Tanamin menjawab masalah ini dengan jadwal perawatan otomatis berbasis data kebu
 
 ## 🎨 Desain
 
-Figma: [Proyek PBP Kelas E - Web - Kelompok 11](https://www.figma.com/design/51xWxb5B4aqX1N8XcfwIAM/Proyek-PBP-Kelas-E---Web---Kelompok-11?node-id=0-1&p=f&t=NdPwGLEqF7LR3Awm-0)
+Figma: [Figma PBP Kelas E - Web - Kelompok 11](https://www.figma.com/design/51xWxb5B4aqX1N8XcfwIAM/Proyek-PBP-Kelas-E---Web---Kelompok-11?node-id=0-1&p=f&t=NdPwGLEqF7LR3Awm-0)
+Deployment: [Proyek PBP Kelas E - Web - Kelompok 11](https://finna-aprilia-tanamin.pws.cs.ui.ac.id/)
