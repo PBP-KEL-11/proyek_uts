@@ -29,6 +29,15 @@ class DashboardTest(TestCase):
         self.assertEqual(self.greentrack.level_number, 1)
         self.assertEqual(self.greentrack.current_xp, 0)
         self.assertEqual(self.greentrack.xp_max, 250)
+        self.greentrack.add_xp()
+        self.assertEqual(self.greentrack.current_xp, 100)
+        i = 0
+        while i<2 :
+            self.greentrack.add_xp()
+            i+=1
+        self.assertEqual(self.greentrack.current_xp, 0)
+        self.assertEqual(self.greentrack.current_level, "Adept Gardener")
+        self.assertEqual(self.greentrack.level_number, 2)
         
     def test_admin_greentrack_dashboard_page(self):
         response = self.client.get(reverse("dashboard:show_admin_greentrack_cards"))
@@ -44,8 +53,4 @@ class DashboardTest(TestCase):
         response = self.client.get(reverse("dashboard:create_greentrack"))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "dashboard/create_greentrack.html")
-        
-    def test_index_page(self):
-        response = self.client.get(reverse("dashboard:index"))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "dashboard/index.html")
+    

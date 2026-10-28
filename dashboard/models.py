@@ -35,9 +35,10 @@ class GreenTrack(models.Model):
         
     def level_up(self):
         if self.current_level != self.LEVELS[6]:
-            self.current_level = self.LEVEL[self.current_level]
-            self.xp_max = self.XPMAX[self.current_level]
-            self.current_level+=1
+            self.current_level = self.LEVELS[self.level_number]
+            self.xp_max = self.XPMAX[self.level_number]
+            self.level_number+=1
+            self.current_xp = 0
             
     def add_xp(self):
         self.current_xp+=100;

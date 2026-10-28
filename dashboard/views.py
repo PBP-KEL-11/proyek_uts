@@ -42,7 +42,6 @@ def get_greentrack_json(request):
                 "active_badge":greentrack.active_badge,
                 "current_level":greentrack.current_level,
                 "level_number": greentrack.level_number,
-                "streak":greentrack.streak
             }
         })
     return JsonResponse(greentrack_data, safe=False)
@@ -64,10 +63,14 @@ def show_user_greentrack_details(request, id):
     return render(request, "dashboard/greentrack_detail.html", context)
 
 def index(request):
-    return render(request, "dashboard/index.html")
+    try:
+        greentrack = GreenTrack.objects.get(user=request.user)
+        return redirect("dashboard:show_user_greentrack_details", id=request.user.id)
+    except GreenTrack.DoesNotExist:
+        return redirect("dashboard:create_greentrack")
     
 def get_user_greentracker_json(request):
-    greentracker = GreenTrack.filter(user=request.user)
+    greentracker = GreenTrack.objects.all().filter(user=request.user)
     
     greentrack_data = []
     for greentrack in greentracker:
@@ -80,7 +83,6 @@ def get_user_greentracker_json(request):
                 "active_badge":greentrack.active_badge,
                 "current_level":greentrack.current_level,
                 "level_number": greentrack.level_number,
-                "streak":greentrack.streak,
                 "nickname":greentrack.greentrack_nickname,
             }
         })
@@ -130,16 +132,20 @@ def show_admin_gardenplants_details(request, id):
 def create_greentrack_AJAX(request):
     form = GreenTrackForm(request.POST)
     if form.is_valid():
-        greentrack=form.save()
+        greentrack=form.save(commit=False)
+        greentrack.user = request.user
+        greentrack_form = greentrack.save()
         return JsonResponse({
-            "message":"Kamu Berhasil Mendaftarkan Diri ke Green Track!", "pk":str(greentrack.id)
+            "message":"Kamu Berhasil Mendaftarkan Diri ke Green Track!", "pk":str(greentrack_form.id)
         }, status=201)
     return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
 
 def create_greentrack(request):
     form = GreenTrackForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
-        form.save()
+        check=form.save(commit=False)
+        check.user = request.user
+        check.save()
         return redirect("dashboard:index")
     context = {"form":form}
     return render(request, "dashboard/create_greentrack.html", context)
@@ -149,15 +155,15 @@ def update_greentrack(request, id):
     form = GreenTrackForm(request.POST or None, instance=greentrack)
     if form.is_valid():
         form.save()
-        return redirect("dasboard:index")
+        return redirect("dashboard:index")
     context = {"form":form}
-    return render(request, "update_greentrack.html", context)   
+    return render(request, "dashboard/update_greentrack.html", context)   
 
 def delete_greentrack(request, id):
     greentrack = get_object_or_404(GreenTrack, pk=id) 
     if request.method == "POST":
         greentrack.delete()
         messages.success(request, "Green Track Berhasil Dihapus!")
-        return redirect("main:index")
-    return redirect("main:index")
+        return redirect("dashboard:index")
+    return redirect("dashboard:index")
 

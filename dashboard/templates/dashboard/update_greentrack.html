@@ -8,7 +8,7 @@
         <section class="register-greentrack">
         <div class="register-greentrack-container">
             <h2>Update Greentrack</h2>
-        <form method="post" action="{% url "dashboard:update_greentrack" %}" class="register-greentrack-form">
+        <form method="post" class="register-greentrack-form">
             {% for field in form %}
             {% csrf_token %}
                 <div class="form-group">

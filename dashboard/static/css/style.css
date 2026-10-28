@@ -299,6 +299,35 @@
     border: 1.5px solid var(--primary);
 }
 
+.delete-greentrack-button:link, .delete-greentrack-button:visited, .update-greentrack-button:link, .update-greentrack-button:visited{
+    display: inline-block;
+    text-align: center;
+    color: var(--primary);
+    background-color: var(--background);
+    color: var(--neutral);
+    padding: 12px 24px;
+    margin-top: 20px;
+    border: 3px solid var(--neutral);
+    border-radius: var(--radius);
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    transition: all 0.2s ease;
+}
+
+.update-greentrack-button:hover{
+    color: var(--white);
+    background-color: var(--primary);
+    border: 1.5px solid var(--primary);
+}
+
+.delete-greentrack-button:hover{
+    color: var(--white);
+    background-color: #e20d0d;
+}
+
 .register-greentrack{
     background-color: var(--background);
     height: 600px;
