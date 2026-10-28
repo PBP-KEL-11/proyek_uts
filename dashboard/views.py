@@ -15,7 +15,6 @@ from dashboard.forms import GreenTrackForm
 def show_base(request):
     return render(request, "dashboard/base_dashboard.html")
 
-@login_required
 def show_admin_greentrack_cards(request):
     query = request.GET.get("title", "").strip()
     context = {
@@ -56,6 +55,14 @@ def show_admin_greentrack_details(request, id):
     }
     return render(request, "dashboard/admin_greentrack_detail.html", context)
 
+def show_user_greentrack_details(request, id):
+    greentrack = get_object_or_404(GreenTrack, pk = id)
+    context = {
+        "title":"Detail Pengguna",
+        "greentrack":greentrack
+    }
+    return render(request, "dashboard/greentrack_detail.html", context)
+
 def index(request):
     return render(request, "dashboard/index.html")
     
@@ -73,7 +80,8 @@ def get_user_greentracker_json(request):
                 "active_badge":greentrack.active_badge,
                 "current_level":greentrack.current_level,
                 "level_number": greentrack.level_number,
-                "streak":greentrack.streak
+                "streak":greentrack.streak,
+                "nickname":greentrack.greentrack_nickname,
             }
         })
     return JsonResponse(greentrack_data, safe=False)
@@ -109,16 +117,14 @@ def get_gardenplants_json(request):
 
 def show_admin_gardenplants_details(request, id):
     username=request.user
-    garden_plant = get_object_or_404(
-        GardenPlant,
-        pk=id,
-        user=request.user,
-    )
+    garden_plant = GardenPlant.objects.all().filter(user=request.user)
     context = {
         "user":username,
         "garden_plant":garden_plant,
     }
-    return render(request, "dashboard/admin_user_detail.html", )
+    return render(request, "dashboard/admin_user_detail.html", context)
+
+
 
 @require_POST
 def create_greentrack_AJAX(request):

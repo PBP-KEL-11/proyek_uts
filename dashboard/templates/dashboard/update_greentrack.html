@@ -1,20 +1,25 @@
 {% extends "dashboard/base_dashboard.html" %}
 {% block meta %}
-    <title> Update Data Green Track<title>
+    <title> Update Greentrack </title>
 {% endblock meta %}
 
-{%block content%}
-        <form method="POST">
-
+{% block content %}
+    <main class="dashboard-main">
+        <section class="register-greentrack">
+        <div class="register-greentrack-container">
+            <h2>Update Greentrack</h2>
+        <form method="post" action="{% url "dashboard:update_greentrack" %}" class="register-greentrack-form">
+            {% for field in form %}
             {% csrf_token %}
-            <h1>Update Green Track</h1>
-            <p>Ubah Nama atau Deskripsi Akun Green Track mu</p>
-
-            {{ form.as_p }}
-
-            <button type="submit">
-                Update
-            </button>
-
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                </div>
+            {% endfor %}
+            <button type="submit" class="btn-secondary">Update</button>
         </form>
-{%endblock content%}
+    </div>
+    </section>
+    </main>
+{% endblock content %}
+

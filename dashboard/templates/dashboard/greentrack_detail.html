@@ -1,0 +1,30 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block meta %}
+    <title> Green Track - {{greentrack.user}}</title>
+{% endblock meta %}
+
+{%block content%}
+        <main class="greentrack-details-main">
+          <section class="greentrack-details-section">
+            <div class="greentrack-details-container">
+                <div class="greentrack-details-detail">
+                    <h2 class="greentrack-details-username">{{greentrack.greentrack_nickname}}</h2>
+                    <h3 class="greentrack-details-level"> Level {{greentrack.level_number}}</h3>
+                    <h4 class="greentrack-details-title">{{greentrack.current_level}}</h4>
+                    <p class="greentrack-details-description">{{greentrack.greentrack_description}}</p>
+                    <div class="greentrack-details-xp">
+                        <p class="greentrack-details-progress"> {{greentrack.current_xp}} / {{greentrack.xp_max}}</p>
+                        <div class="greentrack-details-progress-bar"></div>
+                    </div>
+                    <div class="greentrack-details-active-badge">
+                        <p class="active-badge-title">Active Badges</p>
+                        <p>🎖️</p>
+                        <p>No Active Badges</p>
+                    </div>
+                    <a href="{% url 'dashboard:update_greentrack' id=greentrack.user.id %}" class="create-greentrack-button">Update Greentrack</a>
+                    <a href="{% url 'dashboard:delete_greentrack' id=greentrack.user.id%}" class="create-greentrack-button">Hapus Greentrack</a>
+                </div>
+            </div>
+          </section>  
+        </main>
+{%endblock content%}

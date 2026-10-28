@@ -25,8 +25,7 @@ class GreenTrack(models.Model):
              2000,
              5000]
     
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, primary_key=True, null=False)
-    personal_plant = models.OneToOneField(GardenPlant, on_delete=models.PROTECT, null=True)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, primary_key=True)
     current_xp = models.IntegerField(default=0)
     xp_max = models.IntegerField(default=XPMAX[0])
     level_number = models.IntegerField(default=1)
