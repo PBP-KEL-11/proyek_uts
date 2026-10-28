@@ -103,6 +103,14 @@ editForm.addEventListener("submit", async (e) => {
 
         const data = await res.json();
 
+        if (res.ok) {
+            if (res.ok) {
+                sessionStorage.setItem('toast', JSON.stringify ({
+                    title: 'Berhasil', message: data.message, type: data.status
+                }));
+            }
+        }
+
         if (data.status === "success") {
             window.location.href = data.redirect_url;
             return;

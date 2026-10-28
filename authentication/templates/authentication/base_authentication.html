@@ -27,12 +27,6 @@
     </symbol>
 </svg>
 
-{% if messages %}
-    {% for message in messages %}
-        <script>alert("{{ message|escapejs }}");</script>
-    {% endfor %}
-{% endif %}
-
 <div class="login-page">
 
     <!-- Panel kiri (sama di semua halaman authentication) -->
@@ -80,5 +74,8 @@
 </div>
 
 {% block extra_js %}{% endblock %}
+
+<script src="{% static 'js/main/toast.js' %}"></script>
+
 </body>
 </html>

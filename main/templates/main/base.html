@@ -16,11 +16,8 @@
 
     {% block header %}{% include 'main/includes/header.html' %}{% endblock %}
 
-    {% if messages %}
-        {% for message in messages %}
-            <script>alert("{{ message|escapejs }}");</script>
-        {% endfor %}
-    {% endif %}
+
+    {% block toast %}{% include 'main/includes/toast.html' %}{% endblock %}
 
     <main>
         {% block content %}{% endblock %}
@@ -28,6 +25,7 @@
 
     {% block footer %}{% include 'main/includes/footer.html' %}{% endblock %}
 
+    <script src="{% static 'js/main/toast.js' %}"></script>
 
     <script>
     document.querySelectorAll("[data-logout]").forEach(link => {
@@ -41,7 +39,17 @@
                     headers: { "X-CSRFToken": token, "X-Requested-With": "XMLHttpRequest" }
                 });
                 const data = await res.json();
+
+                if (res.ok) {
+                    if (res.ok) {
+                        sessionStorage.setItem('toast', JSON.stringify ({
+                            title: 'Berhasil', message: data.message, type: data.status
+                        }));
+                    }
+                }
+                
                 window.location.href = data.redirect_url;
+
             } catch (err) {
                 window.location.href = link.href;     // cadangan: logout biasa lewat GET
             }
@@ -49,7 +57,7 @@
     });
     </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
     {% block extra_js %}{% endblock %}
 </body>
 </html>
