@@ -32,14 +32,14 @@ class GreenTrack(models.Model):
     active_badge = models.CharField(default="Tidak Ada Badge Aktif")
     greentrack_nickname = models.CharField(max_length=20, null=True)
     greentrack_description = models.TextField(null=True)
-        
+      
     def level_up(self):
         if self.current_level != self.LEVELS[6]:
             self.current_level = self.LEVELS[self.level_number]
             self.xp_max = self.XPMAX[self.level_number]
             self.level_number+=1
             self.current_xp = 0
-            
+    
     def add_xp(self):
         self.current_xp+=100;
         if self.current_xp>=self.xp_max:

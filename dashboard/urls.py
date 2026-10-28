@@ -17,5 +17,6 @@ urlpatterns = [
     path('greentrack-details/<uuid:id>', views.show_user_greentrack_details, name="show_user_greentrack_details"),
     path("greentrack/<str:id>/delete/",views.delete_greentrack,name="delete_greentrack"),
     path("greentrack/<str:id>/update/",views.update_greentrack, name="update_greentrack"),
+    path("greentrack/gain-xp",views.gain_experience, name="gain_experience"),
     path('', views.index, name="index"),
 ]

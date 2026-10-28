@@ -167,3 +167,10 @@ def delete_greentrack(request, id):
         return redirect("dashboard:index")
     return redirect("dashboard:index")
 
+def gain_experience(request):
+    try:
+        greentrack = GreenTrack.objects.get(user=request.user)
+        greentrack.add_xp()
+    except GreenTrack.DoesNotExist:
+        pass
+
