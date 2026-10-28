@@ -139,7 +139,7 @@ def create_greentrack_AJAX(request):
             "message":"Kamu Berhasil Mendaftarkan Diri ke Green Track!", "pk":str(greentrack_form.id)
         }, status=201)
     return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
-
+@login_required
 def create_greentrack(request):
     form = GreenTrackForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
@@ -149,7 +149,7 @@ def create_greentrack(request):
         return redirect("dashboard:index")
     context = {"form":form}
     return render(request, "dashboard/create_greentrack.html", context)
-
+@login_required
 def update_greentrack(request, id):
     greentrack = get_object_or_404(GreenTrack, pk=id)
     form = GreenTrackForm(request.POST or None, instance=greentrack)
@@ -158,7 +158,7 @@ def update_greentrack(request, id):
         return redirect("dashboard:index")
     context = {"form":form}
     return render(request, "dashboard/update_greentrack.html", context)   
-
+@login_required
 def delete_greentrack(request, id):
     greentrack = get_object_or_404(GreenTrack, pk=id) 
     if request.method == "POST":
