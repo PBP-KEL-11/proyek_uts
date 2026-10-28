@@ -1,0 +1,108 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block meta %}
+    <title>Tanaman Pengguna Tanamin</title>
+{% endblock meta %}
+
+{% block content %}
+    <main class="dashboard-main">
+
+            <h1 class="admin-dashboard-title"> TANAMAN PENGGUNA TANAMIN</h1>
+            
+            <section class="search-section">
+                <form method="get" class="search-form" id="search-form">
+                    <input type="search"
+                    id="search-input" 
+                    value="{{ query }}"
+                    class="search-form__input"
+                    aria-label="Cari Pengguna"
+                    placeholder="Cari Nama Pengguna">
+                    <button type="submit" class="btn-primary">Search</button>
+                </form>
+            </section>
+
+            <section class="card-grid-section">
+                <div class="card-grid-container">
+                    <div class="column-name">
+                        <p>NAMA PENGGUNA</p>
+                        <p>TANAMAN</p>
+                        <p>TANGGAL DITAMBAHKAN</p>
+                    </div>
+                    <div id="grid">
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <script>
+        const DATA = "{% url 'dashboard:get_gardenplants_json' %}";
+        let abortController;
+
+        const gridContainer = document.getElementById("grid");
+        const searchForm = document.getElementById("search-form");
+        const searchInput = document.getElementById("search-input");
+
+        const TIMER = 250;
+        let searchDebouncer;
+
+        function displayPage(){}
+
+        function buildCard(data){
+            const gardenplant = data.fields;
+            const gardenplant_user = data.pk;
+
+            const cardElement = document.createElement('div');
+
+            const fullCardHtml = `
+            <div class="card-container" onclick="location.href='/dashboard/admin-user-details/${gardenplant_user}';" style="cursor:pointer;">
+            <p class="profile-name"> ${gardenplant.user} </p>
+            <p class="profile-level-number"> ${gardenplant.plant}</p>
+            <p class="profile-level-name">${gardenplant.added_at}</p>
+            </div>`;
+
+            cardElement.innerHTML = fullCardHtml;
+            return cardElement;
+        }
+
+        async function getGardenPlants(query=""){
+            if(abortController) abortController.abort();
+            abortController = new AbortController();
+
+            try{
+                const url = query ?`${DATA}?user=${query}` : DATA;
+                const response = await fetch(url, {
+                    headers: {'Accept':'application/json'},
+                    signal: abortController.signal,
+                });
+
+                const greenplant_data = await response.json();
+                gridContainer.innerHTML = '';
+                greenplant_data.forEach(data => {
+                    gridContainer.appendChild(buildCard(data))
+                });
+            }
+            catch(error){
+                if(error.name === 'AbortError') return;
+                console.error('Error loading projects', error);
+            }
+        }
+
+        function searchUser(){
+            getGardenPlants(searchInput.value.trim());
+        }
+
+        searchInput.addEventListener("input", function(){
+            clearTimeout(searchDebouncer);
+            searchDebouncer = setTimeout( function(){searchUser()}, DEBOUNCE_TIMER);
+        })
+
+        searchForm.addEventListener("submit", function(event){
+            event.preventDefault();
+            clearTimeout(searchDebouncer);
+            searchUser();
+        })
+
+        getGardenPlants(searchInput.value.trim());
+    </script>
+{% endblock content %}
+

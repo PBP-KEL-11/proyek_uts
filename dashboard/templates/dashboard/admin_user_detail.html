@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="{% static '/css/style.css' %}">
+        <title>Detail Jejak Hijau - {{greentrack.user}}</title>
+    </head>
+
+    <body>
+        <header class="site-header">
+            <div class="container">
+
+                <!-- Brand -->
+                <a href="{% url 'main:show_main' %}" class="brand">
+                    {{ name }}
+                </a>
+
+                <!-- Navigation -->
+                <nav class="nav-menu">
+
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'notes:index' %}">
+                            Jurnal
+                        </a>
+
+                        <a href="{% url 'schedules:index' %}">
+                            Schedule
+                        </a>
+
+                        <a href="{% url 'plants:species_list' %}">
+                            Plants
+                        </a>
+
+                        <a href="{% url 'dashboard:index' %}">
+                            Dashboard
+                        </a>
+
+                        {% if user.is_superuser %}
+                            <a href="{% url 'dashboard:show_admin_greentrack_cards' %}">Pemain Green Track</a>
+                            <a href="{% url 'dashboard:show_admin_users_cards' %}"> Tanaman Pengguna Tanamin</a>
+                        {% endif %}
+
+                        <a href="{% url 'authentication:profile' %}"
+                        class="btn-login">
+                            Profile
+                        </a>
+
+                        <a href="{% url 'authentication:logout_user' %}"
+                        class="btn-register">
+                            Logout
+                        </a>
+
+                    {% else %}
+
+                        <a href="{% url 'authentication:login_user' %}"
+                        class="btn-login">
+                            Login
+                        </a>
+
+                        <a href="{% url 'authentication:register' %}"
+                        class="btn-register">
+                            Register
+                        </a>
+
+                    {% endif %}
+
+                </nav>
+
+            </div>
+        </header>
+        
+        <main>
+        </main>
+
+        <footer class="site-footer">
+
+            <p>
+                © 2026 Tanamin. Grow better, together.
+            </p>
+
+        </footer>
+    </body>
+
+</html>
