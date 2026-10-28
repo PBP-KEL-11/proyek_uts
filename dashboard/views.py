@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Prefetch
 from django.views.decorators.http import require_POST
 from django.utils import timezone
+from django.contrib import messages
 
 from plants.models import GardenPlant
 from notes.models import Note
@@ -56,13 +57,26 @@ def show_admin_greentrack_details(request, id):
     return render(request, "dashboard/admin_greentrack_detail.html", context)
 
 def index(request):
-    try:
-        greentrack = GreenTrack.objects.get(pk=request.user.id)
-        context = {"greentrack":greentrack}
-        return render(request, "index.html", context)
-    except GreenTrack.DoesNotExist:
-        return redirect("dashboard/create_greentrack.html")
+    return render(request, "dashboard/index.html")
     
+def get_user_greentracker_json(request):
+    greentracker = GreenTrack.filter(user=request.user)
+    
+    greentrack_data = []
+    for greentrack in greentracker:
+        greentrack_data.append({
+            "pk":str(greentrack.user.id),
+            "fields": {
+                "username":str(greentrack.user),
+                "current_xp":greentrack.current_xp,
+                "xp_max":greentrack.xp_max,
+                "active_badge":greentrack.active_badge,
+                "current_level":greentrack.current_level,
+                "level_number": greentrack.level_number,
+                "streak":greentrack.streak
+            }
+        })
+    return JsonResponse(greentrack_data, safe=False)
 
 def show_admin_gardenplants_cards(request):
     query = request.GET.get("title", "").strip()
@@ -116,6 +130,14 @@ def create_greentrack_AJAX(request):
         }, status=201)
     return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
 
+def create_greentrack(request):
+    form = GreenTrackForm(request.POST or None)
+    if request.method == "POST" and form.is_valid():
+        form.save()
+        return redirect("dashboard:index")
+    context = {"form":form}
+    return render(request, "dashboard/create_greentrack.html", context)
+
 def update_greentrack(request, id):
     greentrack = get_object_or_404(GreenTrack, pk=id)
     form = GreenTrackForm(request.POST or None, instance=greentrack)
@@ -123,8 +145,13 @@ def update_greentrack(request, id):
         form.save()
         return redirect("dasboard:index")
     context = {"form":form}
-    return render(request, "update_greentrack.html", form)   
+    return render(request, "update_greentrack.html", context)   
 
 def delete_greentrack(request, id):
     greentrack = get_object_or_404(GreenTrack, pk=id) 
+    if request.method == "POST":
+        greentrack.delete()
+        messages.success(request, "Green Track Berhasil Dihapus!")
+        return redirect("main:index")
+    return redirect("main:index")
 

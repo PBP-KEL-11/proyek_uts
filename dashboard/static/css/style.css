@@ -275,6 +275,100 @@
     color: var(--background);
 }
 
+.dashboard-description{
+    text-align: center;
+    font-family: "jaro", sans-serif;
+    font-weight: 300;
+    font-size: medium;
+}
+
+.create-greentrack-button:link, .create-greentrack-button:visited{
+    display: inline-block;
+    text-align: center;
+    color: var(--primary);
+    background-color: var(--background);
+    color: var(--neutral);
+    padding: 12px 24px;
+    margin-left: 450px;
+    margin-top: 200px;
+    border: 3px solid var(--neutral);
+    border-radius: var(--radius);
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    transition: all 0.2s ease;
+}
+
+.create-greentrack-button:hover{
+    color: var(--white);
+    background-color: var(--primary);
+    border: 1.5px solid var(--primary);
+}
+
+.register-greentrack{
+    background-color: var(--background);
+    height: 600px;
+    width:700px;
+    border-radius: 5px;
+    justify-self: center;
+    padding-top: 30px;
+}
+
+.register-greentrack-container{
+    border: var(--neutral) solid 3px;
+    height:550px;
+    width:500px;
+    justify-self: center;
+    font-family: "jaro", sans-serif;
+    font-size: 30px;
+    color: var(--neutral);
+    text-align: center;
+    padding-top: 25px;
+}
+
+.register-greentrack-form{
+    font-size: 25px;
+    align-items: center;
+    padding-top: 10px;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+    font-size: medium;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-weight: 700;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 90%;
+    box-sizing: border-box;
+    padding: 0.7rem;
+    border: 1px solid var(--neutral);
+    border-radius: 5px;
+    font: inherit;
+    transition:
+        border-color 0.2s ease,
+        outline-color 0.2s ease;
+}
+
+.form-group input:focus,
+
+.form-group textarea:focus {
+    outline: 2px solid var(--neutral);
+    border-color: var(--neutral);
+}
+
+
+
+
+
 
 .btn-primary,
 .btn-secondary {

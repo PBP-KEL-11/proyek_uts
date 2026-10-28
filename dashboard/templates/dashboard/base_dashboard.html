@@ -5,6 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static '/css/style.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.11/dist/htmx.min.js" 
+        integrity="sha384-2OatzQy1H+Zd/IIrjr1TcuDGqLXeHhbooAyJY1KdQMKnr4LZ22k31GBLdYKHmVjg"
+        crossorigin="anonymous">
+    </script>
     {% block meta %}{% endblock meta %}
 </head>
 
@@ -20,11 +24,10 @@
                     <a href="{% url 'notes:index' %}">Jurnal</a>
                     <a href="{% url 'schedules:index' %}">Schedule</a>
                     <a href="{% url 'plants:species_list' %}">Plants</a>
+                    <a href="{% url 'dashboard:index' %}">Dashboard</a>
                     {% if user.is_superuser %}
                         <a href="{% url 'dashboard:show_admin_greentrack_cards' %}">Pemain Green Track</a>
                         <a href="{% url 'dashboard:show_admin_users_cards' %}"> Tanaman Pengguna Tanamin</a>
-                        {% else %}
-                        <a href="{% url 'dashboard:index' %}">Dashboard</a>
                     {% endif %}
 
                     <a href="{% url 'authentication:profile' %}" class="btn-login">Profile</a>
