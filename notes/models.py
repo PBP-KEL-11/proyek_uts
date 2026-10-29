@@ -26,7 +26,17 @@ class Note(models.Model):
         INDOOR_START = "indoor_start", "Indoor Start"
         TRANSPLANT = "transplant", "Transplant"
 
-    
+    # Pemilik catatan. Dipakai oleh Schedules (Note.objects.filter(user=...)).
+    # null=True supaya migrasi aman untuk catatan lama yang belum punya pemilik.
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="notes",
+        null=True,
+        blank=True,
+    )
+
+    # Tautan opsional ke tanaman di "Kebun Saya" (diisi dari tombol di Dashboard).
     garden_plant = models.ForeignKey(
     "plants.GardenPlant",
     on_delete=models.CASCADE,
@@ -68,10 +78,6 @@ class Note(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
-
-    @property
-    def user(self):
-        return self.garden_plant.user
 
     def __str__(self):
         return f"{self.title} ({self.plant_name})"
