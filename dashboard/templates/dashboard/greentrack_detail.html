@@ -19,7 +19,7 @@
                     <div class="greentrack-details-active-badge">
                         <p class="active-badge-title">Active Badges</p>
                         <p>🎖️</p>
-                        <p>No Active Badges</p>
+                        <p>{{greentrack.active_badge}}</p>
                     </div>
                     <a href="{% url 'dashboard:update_greentrack' id=greentrack.user.id %}" class="update-greentrack-button">Update Greentrack</a>
                     <a href="{% url 'dashboard:delete_greentrack' id=greentrack.user.id%}" class="delete-greentrack-button">Hapus Greentrack</a>

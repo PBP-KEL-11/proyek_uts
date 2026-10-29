@@ -117,7 +117,7 @@ def get_gardenplants_json(request):
         })
     return JsonResponse(garden_plants_data, safe=False)
 
-def show_admin_gardenplants_details(request, id):
+def show_admin_gardenplants_details(request):
     username=request.user
     garden_plant = GardenPlant.objects.all().filter(user=request.user)
     context = {
@@ -160,11 +160,9 @@ def update_greentrack(request, id):
     return render(request, "dashboard/update_greentrack.html", context)   
 @login_required
 def delete_greentrack(request, id):
-    greentrack = get_object_or_404(GreenTrack, pk=id) 
-    if request.method == "POST":
-        greentrack.delete()
-        messages.success(request, "Green Track Berhasil Dihapus!")
-        return redirect("dashboard:index")
+    greentrack = get_object_or_404(GreenTrack, pk=id)
+    greentrack.delete()
+    messages.success(request, "Green Track Berhasil Dihapus!")
     return redirect("dashboard:index")
 
 def gain_experience(request):
