@@ -63,8 +63,39 @@
     }
     .task-card.done { opacity: 0.6; background-color: #F5F9F5; }
     .task-card.done h3 { text-decoration: line-through; }
-    .task-card.all_completed { background-color: #eaf2eb; }
-    .task-card.all_completed h3 {text-align: center;}
+    /* Status cards: all_completed, not_completed (reminder 18:00), missed */
+    .task-card[hidden] { display: none; }
+    .task-card.all_completed,
+    .task-card.not_completed,
+    .task-card.missed {
+        justify-content: flex-start;
+        border: none;
+        border-left: 6px solid;
+        padding: 20px 24px;
+    }
+    .task-card.all_completed { background-color: #EAF2EB; border-left-color: #347338; }
+    .task-card.all_completed h3 { color: #134023; }
+    .task-card.not_completed { background-color: #FDECEA; border-left-color: #D64545; }
+    .task-card.not_completed h3 { color: #8A1C1C; }
+    .task-card.missed { background-color: #FFF6DB; border-left-color: #E0A100; }
+    .task-card.missed h3 { color: #6B4B00; font-size: 16px; }
+    .status-icon { font-size: 28px; line-height: 1; flex-shrink: 0; }
+    /* Satu momen animasi: lonceng bergetar saat reminder muncul */
+    .not_completed .status-icon {
+        display: inline-block;
+        transform-origin: 50% 10%;
+        animation: bell-ring 1.6s ease-in-out 3;
+    }
+    @keyframes bell-ring {
+        0%, 40%, 100% { transform: rotate(0); }
+        8%  { transform: rotate(16deg); }
+        16% { transform: rotate(-14deg); }
+        24% { transform: rotate(10deg); }
+        32% { transform: rotate(-6deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .status-icon { animation: none !important; }
+    }
     .badge-done { color: #347338; font-weight: 700; font-size: 14px; }
     .empty-state {
         text-align: center;
@@ -121,13 +152,22 @@
     <div class="schedule-section">
         <h1 class="schedule-title">Daily Tasks</h1>
         <div class="task-list">
+            {% if missed_message %}
+            <div class="task-card missed">
+                <span class="status-icon" aria-hidden="true">&#9888;&#65039;</span>
+                <div class="task-info"><h3>{{ missed_message }}</h3></div>
+            </div>
+            {% endif %}
             {% if all_completed %}
             <div class="task-card all_completed">
-                <div class="task-info">
-                    <h3>All daily tasks have been completed!! See you tomorrow :D</h3>
-                </div>
+                <span class="status-icon" aria-hidden="true">&#127793;</span>
+                <div class="task-info"><h3>{{ all_completed_message }}</h3></div>
             </div>
             {% else %}
+                <div id="reminder-card" class="task-card not_completed" {% if not show_reminder %}hidden{% endif %}>
+                    <span class="status-icon" aria-hidden="true">&#128276;</span>
+                    <div class="task-info"><h3>{{ reminder_message }}</h3></div>
+                </div>
                 {% for task in pending_tasks %}
                 <div class="task-card{% if task.is_completed %} done{% endif %}">
                     <div class="task-info">

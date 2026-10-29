@@ -2,17 +2,31 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from .models import PlantTask
-from .services import generate_daily_tasks, get_user_plant_names, get_all_complete_tasks
+from .services import (
+    generate_daily_tasks, get_user_plant_names, get_all_complete_tasks,
+    all_completed_message, all_reminder_message, seconds_until_reminder, get_missed_days,
+    unfinished_message
+)
 from dashboard.views import gain_experience
+
 @login_required
 def schedule_dashboard(request):
     today = timezone.localdate() #In localhost, user is allowed to change/swap local time
     #noted that settings.py timezone is using UTC and not Asia/Jakarta
     
+    missed_days = get_missed_days(request.user, today)
+    missed_message = None
+    if missed_days > 0 and request.session.get('missed_notice_date') != today.isoformat():
+        missed_message = unfinished_message(missed_days)
+        request.session['missed_notice_date'] = today.isoformat()
+ 
     generate_daily_tasks(request.user, today)
     pending_tasks = PlantTask.objects.filter(user=request.user, due_date=today).order_by('is_completed', 'id')
     care_logs = PlantTask.objects.filter(user=request.user, is_completed=True).order_by('-completed_at')
-
+ 
+    all_done = get_all_complete_tasks(request.user, today)
+    reminder_wait = seconds_until_reminder()
+ 
     context = {
         'pending_tasks': pending_tasks,
         'today': today,
@@ -20,7 +34,12 @@ def schedule_dashboard(request):
         #Sehingga needs_plant bersifat true dan menampilkan task "Tambahkan 1 tanaman ke Jurnal"
         'needs_plant': not get_user_plant_names(request.user),
         'care_logs': care_logs,
-        'all_completed': get_all_complete_tasks(request.user, today), 
+        'all_completed': all_done,
+        'reminder_wait': reminder_wait,
+        'show_reminder': reminder_wait == 0 and not all_done,
+        'all_completed_message': all_completed_message(),
+        'reminder_message': all_reminder_message(request.user, today),
+        'missed_message': missed_message,
     }
     return render(request, 'schedules/dashboard.html', context)
 
