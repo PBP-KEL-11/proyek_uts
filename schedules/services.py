@@ -21,6 +21,11 @@ def get_user_plant_names(user):
     )
     return sorted(set(names))
 
+def get_all_complete_tasks(user, today):
+    completed = (
+        PlantTask.objects.filter(user=user, is_completed=True, due_date=today).count()
+    )
+    return (completed == 4)
 
 def generate_daily_tasks(user, date=None):
     """
@@ -29,6 +34,13 @@ def generate_daily_tasks(user, date=None):
 
     Aman dipanggil berkali-kali (idempotent): kategori yang sudah ada tidak dibuat ulang.
     """
+    #Setelah ditinjau, membuat 4 task per hari dengan tanaman tertentu saja itu tidak mengikuti dengan prosedur
+    #Atau alasan utama dibuatnya website Tanamin ini. Dengan demikian, seluruh task pada setiap tanaman akan tetap
+    #ditampulkan. Namun hal tersebut akan membuat daily task ini menjadi sangat panjang jika seandainya jumlah tanaman
+    #terlalu banyak yang akan mengeluarkan sebanyak n*4 task.
+    
+    #To do list:
+    #
     date = date or timezone.localdate()
     plants = get_user_plant_names(user)
     if not plants:

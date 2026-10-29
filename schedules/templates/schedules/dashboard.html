@@ -63,6 +63,8 @@
     }
     .task-card.done { opacity: 0.6; background-color: #F5F9F5; }
     .task-card.done h3 { text-decoration: line-through; }
+    .task-card.all_completed { background-color: #eaf2eb; }
+    .task-card.all_completed h3 {text-align: center;}
     .badge-done { color: #347338; font-weight: 700; font-size: 14px; }
     .empty-state {
         text-align: center;
@@ -105,27 +107,44 @@
     }
 </style>
 
+{% comment %} 
+    To do list:
+    Adds 4 tasks everytime added a new plant to the journal
+    - Shrinks each plant's tasks become one (but using progress bar), 
+      direct by using a bubble pop-up without changing the page -> JS.
+    - Move the 4 tasks inside the bubble pop-up
+    - Progress bar reveals on the task (0/4 completed). Erase when done
+{% endcomment %}
+
 <div class="schedule-container">
     <!-- Bagian 1: Daily Task Dashboard -->
     <div class="schedule-section">
         <h1 class="schedule-title">Daily Tasks</h1>
         <div class="task-list">
-            {% for task in pending_tasks %}
-            <div class="task-card{% if task.is_completed %} done{% endif %}">
+            {% if all_completed %}
+            <div class="task-card all_completed">
                 <div class="task-info">
-                    <h3>{{ task.plant_name }}</h3>
-                    <p>Tugas: <strong>{{ task.get_task_type_display }}</strong> &bull; {{ task.due_date|date:"d M Y" }}</p>
+                    <h3>All daily tasks have been completed!! See you tomorrow :D</h3>
                 </div>
-                {% if task.is_completed %}
-                <span class="badge-done">&#10003; Selesai</span>
-                {% else %}
-                <form method="POST" action="{% url 'schedules:complete_task' task.id %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn-done">Tandai Selesai</button>
-                </form>
-                {% endif %}
             </div>
-            {% endfor %}
+            {% else %}
+                {% for task in pending_tasks %}
+                <div class="task-card{% if task.is_completed %} done{% endif %}">
+                    <div class="task-info">
+                        <h3>{{ task.plant_name }}</h3>
+                        <p>Tugas: <strong>{{ task.get_task_type_display }}</strong> &bull; {{ task.due_date|date:"d M Y" }}</p>
+                    </div>
+                    {% if task.is_completed %}
+                    <span class="badge-done">&#10003; Selesai</span>
+                    {% else %}
+                    <form method="POST" action="{% url 'schedules:complete_task' task.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-done">Tandai Selesai</button>
+                    </form>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            {% endif %}
             {% if needs_plant %}
             <div class="task-card">
                 <div class="task-info">
