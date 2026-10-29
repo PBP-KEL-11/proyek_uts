@@ -109,7 +109,7 @@ def logout_user(request):
     is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
     logout(request)
 
-    if is_ajax:
+    if is_ajax and request.method == 'POST':
         response = JsonResponse({
             'status': 'success',
             'message': 'Logout berhasil',

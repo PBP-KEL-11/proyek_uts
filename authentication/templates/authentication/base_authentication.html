@@ -30,7 +30,7 @@
 <div class="login-page">
 
     <!-- Panel kiri (sama di semua halaman authentication) -->
-    <section class="login-visual">
+    <section class="login-visual" style="--bg: url('{% static 'authentication/img/auth_background.png' %}')">
 
         <div class="visual-top">
             <a href="{% url 'main:show_main' %}" class="btn-beranda">
@@ -42,7 +42,7 @@
         {% block visual_text %}
         <div class="visual-text">
             <p class="visual-lead">Terima kasih telah memilih Tanamin.</p>
-            <p>Kami akan membimbing langkah pertamamu menuju rimbun dan cantiknya hijau dedaunan yang tumbuh dari setiap tanaman yang kamu rawat.</p>
+            <p>Kami akan membimbing langkah pertamamu menuju terciptanya rimbun dan cantiknya hijau dedaunan yang tumbuh dari setiap tanaman yang kamu rawat.</p>
             <p>Semoga perjalanannya menyenangkan.</p>
             <br>
             <p class="visual-sign">

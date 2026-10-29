@@ -11,28 +11,21 @@
 }
 
 :root {
-    /* palet utama (nama sama dengan css/main/style.css) */
     --primary:    #347338;
     --secondary:  #A5BF99;
     --tertiary:   #134023;
     --neutral:    #11261A;
     --background: #E9FFED;
     --white:      #FFFFFF;
-    --danger:     #dc3545;
+    --red:     #dc3545;
 
-    /* hijau tambahan */
     --green-sidebar: #1b4332;   /* sidebar & judul halaman profile */
     --green-panel:   #25503b;   /* panel kiri login, hover tombol */
     --green-button:  #2f6b3a;   /* tombol utama */
     --green-title:   #2a5f33;   /* judul kartu login */
-    --green-light:   #cfe8d4;   /* tombol "Kembali ke Beranda" */
-    --green-lighter: #e2f4e6;   /* hover tombol "Kembali ke Beranda" */
+    --green-light:   #cfe8d4;   /* tombol "Kembali" */
+    --green-lighter: #eefff1; 
 
-    /* latar */
-    --bg-profile: #e8f5e9;
-    --bg-auth:    #e6fcea;
-    --bg-card:    #eefff1;
-    --bg-field:   #f8f9fa;
 
     /* teks & garis */
     --text-body:    #3d5545;
@@ -71,7 +64,7 @@ body {
 .form-error {
     margin-top: 4px;
     font-size: 12px;
-    color: var(--danger);
+    color: var(--red);
 }
 
 .form-error ul { list-style: none; }
@@ -160,7 +153,7 @@ body {
 .profile-main-content {
     flex: 1;
     min-width: 0;                         /* cegah konten mendorong lebar halaman */
-    background-color: var(--bg-profile);
+    background-color: var(--green-light);
     padding: clamp(16px, 4vw, 40px);
     display: flex;
     justify-content: center;
@@ -395,6 +388,9 @@ body {
     align-items: center;
     padding: 28px 24px 40px;
     overflow: hidden;
+    background: linear-gradient(to top, rgba(61, 84, 71, 0.85), rgba(156, 214, 182, 0.35)),
+       var(--bg) center / cover no-repeat;
+    background-size: cover;
 }
 
 /* lebar kolom isi panel kiri (dipakai bersama tombol dan teks) */
@@ -428,7 +424,7 @@ body {
 /* ---------- pesan dari mimin Tanamin ---------- */
 .visual-text {
     margin-top: clamp(32px, 9vh, 72px);
-    color: var(--bg-auth);
+    color: var(--green-light);
     font-family: 'Poppins', sans-serif;
     font-style: italic;
     font-weight: 400;
@@ -472,7 +468,7 @@ body {
 
 /* ---------- Panel kanan ---------- */
 .login-panel {
-    background-color: var(--bg-auth);
+    background-color: var(--green-light);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -484,7 +480,7 @@ body {
 .login-card {
     width: 100%;
     max-width: 440px;
-    background: var(--bg-card);
+    background: var(--green-lighter);
     border-radius: 24px;
     box-shadow: var(--shadow-auth);
     padding: 36px 36px 32px;
@@ -564,8 +560,6 @@ body {
 .link-forgot:hover { color: var(--primary); }
 
 .login-register {
-    width: 100%;
-    max-width: 440px;
     padding-inline: 36px;
     font-size: 13px;
     color: var(--neutral);
@@ -594,7 +588,11 @@ body {
         grid-template-rows: auto 1fr;
     }
 
-    .login-visual { padding: 16px 20px; }
+    .login-visual { 
+        padding: 16px 20px; 
+        min-height: 120;
+        background-position: center, center 30%, center;
+    }
     .visual-top   { width: 100%; }
 
     .visual-text,
@@ -608,3 +606,4 @@ body {
     .login-card { padding: 28px 22px 26px; }
     .login-register { padding-inline: 22px; }
 }
+

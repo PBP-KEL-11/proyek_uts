@@ -3,6 +3,20 @@
 {% block title %}Login | Tanamin{% endblock %}
 {% block heading %}Masuk Akun{% endblock %}
 
+{% block visual_text %}
+    <div class="visual-text">
+        <p class="visual-lead">Selamat datang kembali di Tanamin.</p>
+        <p>Mari mulai lagi langkahmu menuju terciptanya rimbun dan cantiknya hijau dedaunan yang tumbuh dari setiap tanaman yang kamu rawat.</p>
+        <p>Semoga perjalanannya tetap menyenangkan.</p>
+        <p>Dan semangatmu masih sama seperti semula.</p>
+        <br>
+        <p class="visual-sign">
+            <span>Salam Hangat,</span>
+            <span>Tanamin</span>
+        </p>
+    </div>
+{% endblock visual_text %}
+
 {% block card_content %}
     <form method="POST" class="auth-form" id="loginForm">
         {% csrf_token %}
