@@ -169,6 +169,7 @@ def gain_experience(request):
     try:
         greentrack = GreenTrack.objects.get(user=request.user)
         greentrack.add_xp()
+        greentrack.save()
     except GreenTrack.DoesNotExist:
         pass
 
