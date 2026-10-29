@@ -1,0 +1,174 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tanaman | Tanamin</title>
+
+    <link rel="stylesheet" href="{% static 'css/main/style.css' %}">
+
+    <style>
+        .plants-page{max-width:1100px;margin:0 auto;padding:20px}
+        .filter-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+        .filter-bar input,.filter-bar select{padding:8px 10px;border:1px solid #ccc;border-radius:8px}
+        .filter-bar button{padding:8px 16px;border:0;border-radius:8px;background:#3a6b54;color:#fff;cursor:pointer}
+        .plant-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:16px}
+        .plant-card{position:relative;border:1px solid #ddd;border-radius:12px;overflow:hidden;background:#fff}
+        .plant-card .photo{aspect-ratio:4/3;background:#dce7dd;display:grid;place-items:center;color:#666;font-size:13px}
+        .plant-card img{width:100%;height:100%;object-fit:cover}
+        .plant-card .info{padding:10px 12px 14px}
+        .plant-card h3{margin:0;font-size:16px;text-transform:capitalize}
+        .plant-card .sci{margin:2px 0 0;font-size:13px;font-style:italic;color:#666}
+        .add-btn{position:absolute;top:10px;right:10px;width:38px;height:38px;border-radius:50%;border:0;
+                 background:#3a6b54;color:#fff;font-size:24px;line-height:1;cursor:pointer;
+                 display:grid;place-items:center;text-decoration:none;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+        .add-btn:hover{background:#264a3a}
+        .add-btn.added,.add-btn:disabled{background:#8aa898;cursor:default}
+        .pager{display:flex;gap:16px;justify-content:center;align-items:center;margin:28px 0}
+        .error{padding:12px;border:1px solid #b3402f;color:#b3402f;border-radius:8px;margin-bottom:16px}
+        #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#173029;color:#fff;
+               padding:10px 18px;border-radius:8px;opacity:0;pointer-events:none;transition:opacity .2s}
+        #toast.show{opacity:1} #toast.err{background:#b3402f}
+    </style>
+</head>
+
+<body>
+
+    <!-- ========== HEADER ========== -->
+    <header class="site-header">
+        <div class="container">
+
+            <a href="{% url 'main:show_main' %}" class="brand">Tanamin</a>
+
+            <nav class="nav-menu">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'notes:index' %}">Jurnal</a>
+                    <a href="{% url 'schedules:index' %}">Schedule</a>
+                    <a href="{% url 'plants:species_list' %}">Tanaman</a>
+                    <a href="{% url 'dashboard:index' %}">Kebun Saya</a>
+
+                    <a href="{% url 'authentication:profile' %}" class="btn-login">Profile</a>
+                    <a href="{% url 'authentication:logout_user' %}" class="btn-register">Logout</a>
+                {% else %}
+                    <a href="{% url 'authentication:login_user' %}" class="btn-login">Login</a>
+                    <a href="{% url 'authentication:register' %}" class="btn-register">Register</a>
+                {% endif %}
+            </nav>
+
+        </div>
+    </header>
+
+    <!-- ========== ISI HALAMAN ========== -->
+    <main class="plants-page">
+        <h1>Cari Tanaman</h1>
+
+        <form class="filter-bar" method="get">
+            <input type="search" name="q" value="{{ filters.q }}" placeholder="Cari, mis. monstera">
+            <select name="watering">
+                <option value="">Siram: semua</option>
+                {% for val, label in watering_options %}
+                    <option value="{{ val }}" {% if filters.watering == val %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+            <select name="sunlight">
+                <option value="">Cahaya: semua</option>
+                {% for val, label in sunlight_options %}
+                    <option value="{{ val }}" {% if filters.sunlight == val %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+            <select name="indoor">
+                <option value="">Lokasi: semua</option>
+                <option value="1" {% if filters.indoor == "1" %}selected{% endif %}>Indoor</option>
+            </select>
+            <button type="submit">Cari</button>
+        </form>
+
+        {% if error %}<div class="error">{{ error }}</div>{% endif %}
+
+        <div class="plant-grid">
+            {% for p in plants %}
+                <article class="plant-card">
+                    {% if user.is_authenticated %}
+                        {% if p.in_garden %}
+                            <button class="add-btn added" disabled title="Sudah di kebun">&#10003;</button>
+                        {% else %}
+                            <button class="add-btn" data-url="{% url 'plants:add_to_garden' p.id %}"
+                                    title="Tambah ke kebun" aria-label="Tambah {{ p.common_name }} ke kebun">+</button>
+                        {% endif %}
+                    {% else %}
+                        <a class="add-btn" href="{% url 'authentication:login_user' %}?next={{ request.get_full_path|urlencode }}"
+                           title="Login dulu">+</a>
+                    {% endif %}
+
+                    <div class="photo">
+                        {% if p.default_image.medium_url and "upgrade_access" not in p.default_image.medium_url %}
+                            <img src="{{ p.default_image.medium_url }}" alt="{{ p.common_name }}" loading="lazy">
+                        {% else %}Belum ada foto{% endif %}
+                    </div>
+                    <div class="info">
+                        <h3>{{ p.common_name }}</h3>
+                        <p class="sci">{{ p.scientific_name.0 }}</p>
+                    </div>
+                </article>
+            {% empty %}
+                {% if not error %}<p>Nggak ada tanaman yang cocok.</p>{% endif %}
+            {% endfor %}
+        </div>
+
+        {% if last_page > 1 %}
+        <div class="pager">
+            {% if current_page > 1 %}
+                <a href="?{% if qs %}{{ qs }}&{% endif %}page={{ current_page|add:'-1' }}">Sebelumnya</a>
+            {% endif %}
+            <span>Halaman {{ current_page }} dari {{ last_page }}</span>
+            {% if current_page < last_page %}
+                <a href="?{% if qs %}{{ qs }}&{% endif %}page={{ current_page|add:'1' }}">Berikutnya</a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </main>
+
+    <div id="toast" role="status"></div>
+
+    <script src="{% static 'js/main/script.js' %}"></script>
+    <script>
+        const csrfToken = "{{ csrf_token }}";
+        const toastEl = document.getElementById("toast");
+        let toastTimer;
+
+        function toast(msg, isError = false) {
+            toastEl.textContent = msg;
+            toastEl.className = "show" + (isError ? " err" : "");
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => (toastEl.className = ""), 2500);
+        }
+
+        document.querySelectorAll("button.add-btn[data-url]").forEach(btn => {
+            btn.addEventListener("click", async () => {
+                btn.disabled = true;
+                btn.textContent = "…";
+                try {
+                    const res = await fetch(btn.dataset.url, { method: "POST", headers: { "X-CSRFToken": csrfToken } });
+                    const data = await res.json();
+                    if (res.ok) {
+                        btn.innerHTML = "&#10003;";
+                        btn.classList.add("added");
+                        toast(data.message);
+                    } else {
+                        btn.disabled = false;
+                        btn.textContent = "+";
+                        toast(data.message || "Gagal menambahkan.", true);
+                    }
+                } catch {
+                    btn.disabled = false;
+                    btn.textContent = "+";
+                    toast("Koneksi bermasalah.", true);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
