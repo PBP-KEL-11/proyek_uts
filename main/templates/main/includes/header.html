@@ -11,14 +11,14 @@
             </button>
 
             <div class="collapse navbar-collapse" id="mainNav">
-                <ul class="navbar-nav ms-auto align-items-md-center gap-md-3">
+                <ul class="navbar-nav ms-auto align-items-md-center gap-md-3 sticky top-0">
                     {% if user.is_authenticated %}
                         <li class="nav-item"><a class="nav-link" href="{% url 'main:show_main' %}">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'notes:index' %}">Journal</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'schedules:index' %}">Schedule</a></li>
                         <li class="nav-item"><a class="nav-link" href="{% url 'plants:species_list' %}">Plants</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'dashboard:index' %}">Dashboard</a></li>
-
+                        <li class="nav-item"><a class="nav-link" href="{% url 'dashboard:index' %}">Plants</a></li>
+                        
                         <li class="nav-item">
                             <a class="nav-link user-chip d-flex align-items-center gap-2"
                                href="{% url 'authentication:profile' %}" title="Lihat profil">
@@ -39,7 +39,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="btn btn-success btn-sm rounded-pill px-3"
+                            <a class="btn btn-danger btn-sm rounded-pill px-3"
                                href="{% url 'authentication:logout_user' %}" data-logout>Logout</a>
                         </li>
                     {% else %}

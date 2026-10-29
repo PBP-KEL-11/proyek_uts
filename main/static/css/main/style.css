@@ -263,9 +263,18 @@ img { max-width: 100%; }
 
 .feature-card {
     padding: 16px;
+    overflow: hidden;
     border-radius: 12px;
-    background: var(--primary);
-    box-shadow: 0 1px 4px rgba(17, 38, 26, 0.12);
+    background-color: #E9FFED;
+    box-shadow: 0 2px 10px rgba(17, 38, 26, 0.30);
+    transition: transform 0.3s;
+    min-height: 160px;
+    background: linear-gradient(to top, rgba(61, 84, 71, 0.85), rgba(156, 214, 182, 0.35)),
+       var(--bg) center / cover no-repeat;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
 }
 
 .feature-card h3 {

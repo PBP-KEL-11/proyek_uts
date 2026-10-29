@@ -43,8 +43,8 @@
 
             <div class="hero-actions">
                 {% if user.is_authenticated %}
-                    <a href="{% url 'plants:species_list' %}" class="btn-primary">My Plants</a>
-                    <a href="{% url 'schedules:index' %}" class="btn-secondary">View Schedule</a>
+                    <a href="{% url 'notes:index' %}" class="btn-primary">Tanaman Saya</a>
+                    <a href="{% url 'schedules:index' %}" class="btn-secondary">Lihat Jadwal</a>
                 {% else %}
                     <a href="{% url 'authentication:register' %}" class="btn-primary">Mulai Sekarang</a>
                     <a href="#fitur" class="btn-secondary">Pelajari Fitur</a>
@@ -90,23 +90,23 @@
         <h2 class="section-title">Semua yang Kamu Butuhkan</h2>
 
         <div class="feature-grid">
-            <article class="feature-card">
+            <article class="feature-card" style="--bg: url('{% static 'img/main/plant_management.png' %}')">
                 <h3>Plant Management</h3>
                 <p>Kelola data dan koleksi tanamanmu dengan mudah.</p>
             </article>
-            <article class="feature-card">
+            <article class="feature-card" style="--bg: url('{% static 'img/main/notes.png' %}')">
                 <h3>Notes</h3>
                 <p>Catat informasi, pengalaman, atau hal penting lainnya.</p>
             </article>
-            <article class="feature-card">
+            <article class="feature-card" style="--bg: url('{% static 'img/main/shedules.png' %}')">
                 <h3>Schedules</h3>
                 <p>Atur jadwal penyiraman, pemupukan, dan perawatan lainnya.</p>
             </article>
-            <article class="feature-card">
+            <article class="feature-card" style="--bg: url('{% static 'img/main/journal.png' %}')">
                 <h3>Journal</h3>
                 <p>Dokumentasi perkembangan tanamanmu atau aktivitas harianmu.</p>
             </article>
-            <article class="feature-card">
+            <article class="feature-card" style="--bg: url('{% static 'img/main/dashboard.png' %}')">
                 <h3>Dashboard</h3>
                 <p>Lihat ringkasan informasi tanamanmu secara terpusat.</p>
             </article>
