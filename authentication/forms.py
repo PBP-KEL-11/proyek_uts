@@ -6,7 +6,19 @@ from phonenumber_field.formfields import SplitPhoneNumberField
 
 MAX_IMAGE_MB = 2
 
-class RegisterForm(UserCreationForm):
+class UniqueEmail:
+    # Email dinormalisasi ke huruf kecil dan harus unik tanpa peduli huruf besar/kecil.
+    # .exclude(pk=...) memastikan user tetap bisa menyimpan emailnya sendiri(dipakai di EditProfileForm).
+ 
+   def clean_email(self):
+       email = self.cleaned_data['email'].strip().lower()
+       taken = User.objects.filter(email__iexact=email).exclude(pk=self.instance.pk)
+       if taken.exists():
+           raise forms.ValidationError('Email sudah terdaftar.')
+       return email
+
+
+class RegisterForm(UniqueEmail, UserCreationForm):
 
     full_name = forms.CharField(
         label='Full Name',
@@ -36,7 +48,7 @@ class RegisterForm(UserCreationForm):
     def save(self, commit=True):
         user = super().save(commit=False)
 
-        full_name = self.cleaned_data['full_name'].strip()
+        full_name = ' '.join(self.cleaned_data['full_name'].split())
         name_parts = full_name.split(' ', 1)
 
         user.first_name = name_parts[0]
@@ -51,7 +63,7 @@ class RegisterForm(UserCreationForm):
 
         return user
 
-class EditProfileForm(ModelForm):
+class EditProfileForm(UniqueEmail, ModelForm):
     class Meta:
         model = User
         fields = [
