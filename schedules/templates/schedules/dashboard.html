@@ -145,6 +145,81 @@
     .btn-more:hover { background-color: #EAF2EB; }
     .btn-more:disabled { opacity: 0.6; cursor: wait; }
     .btn-more[hidden] { display: none; }
+    /* Mission card (1 kartu per tanaman) + pop-up Details */
+    .task-card.mission.is-complete { background-color: #F5F9F5; border-color: #347338; }
+    .progress {
+        height: 8px;
+        background-color: #EAF2EB;
+        border-radius: 999px;
+        overflow: hidden;
+        margin: 12px 0 6px;
+    }
+    .progress-fill {
+        height: 100%;
+        background-color: #347338;
+        border-radius: 999px;
+        transition: width 0.4s ease;
+    }
+    .progress-label { font-size: 13px; color: #555; font-weight: 600; }
+    .btn-outline {
+        background-color: #ffffff;
+        color: #134023;
+        border: 1px solid #347338;
+    }
+    .btn-outline:hover { background-color: #EAF2EB; }
+    .mission-dialog {
+        border: none;
+        border-radius: 16px;
+        padding: 0;
+        width: min(480px, calc(100% - 32px));
+        color: #11261A;
+        background-color: #ffffff;
+        font-family: inherit;
+        box-shadow: 0 12px 40px rgba(17, 38, 26, 0.25);
+    }
+    .mission-dialog::backdrop { background: rgba(17, 38, 26, 0.45); }
+    .mission-dialog[open] { animation: dialog-in 0.2s ease-out; }
+    @keyframes dialog-in {
+        from { opacity: 0; transform: translateY(8px) scale(0.98); }
+        to   { opacity: 1; transform: none; }
+    }
+    .dialog-inner { padding: 24px; }
+    .dialog-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+    }
+    .dialog-head h3 { margin: 0; font-size: 20px; color: #134023; }
+    .dialog-close {
+        background: none;
+        border: none;
+        font-size: 24px;
+        line-height: 1;
+        cursor: pointer;
+        color: #555;
+        padding: 4px 8px;
+    }
+    .subtask-list { list-style: none; margin: 16px 0 0; padding: 0; }
+    .subtask {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 0;
+        border-bottom: 1px solid #EAF2EB;
+    }
+    .subtask:last-child { border-bottom: none; }
+    .subtask.done strong { color: #888; text-decoration: line-through; }
+    .btn-small { padding: 8px 14px; font-size: 14px; }
+    @media (max-width: 480px) {
+        .task-card.mission { flex-direction: column; align-items: stretch; }
+        .task-card.mission .btn-done { width: 100%; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .mission-dialog[open] { animation: none; }
+        .progress-fill { transition: none; }
+    }
     .badge-task {
         background-color: #D2E3D0;
         color: #134023;
@@ -154,16 +229,6 @@
         font-weight: 700;
     }
 </style>
-
-{% comment %} 
-    To do list:
-    Adds 4 tasks everytime added a new plant to the journal
-    - Shrinks each plant's tasks become one (but using progress bar), 
-      direct by using a bubble pop-up without changing the page -> JS.
-    - Move the 4 tasks inside the bubble pop-up
-    - Progress bar reveals on the task (0/4 completed). Erase when done
-{% endcomment %}
-
 <div class="schedule-container">
     <!-- Bagian 1: Daily Task Dashboard -->
     <div class="schedule-section">
@@ -185,21 +250,53 @@
                     <span class="status-icon" aria-hidden="true">&#128276;</span>
                     <div class="task-info"><h3>{{ reminder_message }}</h3></div>
                 </div>
-                {% for task in pending_tasks %}
-                <div class="task-card{% if task.is_completed %} done{% endif %}">
+                {% for m in missions %}
+                <div class="task-card mission{% if m.is_complete %} is-complete{% endif %}">
                     <div class="task-info">
-                        <h3>{{ task.plant_name }}</h3>
-                        <p>Tugas: <strong>{{ task.get_task_type_display }}</strong> &bull; {{ task.due_date|date:"d M Y" }}</p>
+                        <h3>{{ m.plant_name }}</h3>
+                        {% if m.is_complete %}
+                        <p class="badge-done">&#10003; Semua tugas selesai</p>
+                        {% else %}
+                        <p>Perawatan harian &bull; {{ today|date:"d M Y" }}</p>
+                        <div class="progress" role="progressbar" aria-valuemin="0"
+                             aria-valuemax="{{ m.total }}" aria-valuenow="{{ m.done }}">
+                            <div class="progress-fill" style="width: {{ m.percent }}%;"></div>
+                        </div>
+                        <span class="progress-label">{{ m.done }} / {{ m.total }} selesai</span>
+                        {% endif %}
                     </div>
-                    {% if task.is_completed %}
-                    <span class="badge-done">&#10003; Selesai</span>
-                    {% else %}
-                    <form method="POST" action="{% url 'schedules:complete_task' task.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn-done">Tandai Selesai</button>
-                    </form>
-                    {% endif %}
+                    <button type="button" class="btn-done{% if m.is_complete %} btn-outline{% endif %}"
+                            data-open-mission="mission-{{ forloop.counter }}">Details</button>
                 </div>
+
+                <dialog class="mission-dialog" id="mission-{{ forloop.counter }}" data-plant="{{ m.plant_name }}">
+                    <div class="dialog-inner">
+                        <div class="dialog-head">
+                            <h3>{{ m.plant_name }}</h3>
+                            <button type="button" class="dialog-close" data-close aria-label="Tutup">&times;</button>
+                        </div>
+                        <div class="progress" role="progressbar" aria-valuemin="0"
+                             aria-valuemax="{{ m.total }}" aria-valuenow="{{ m.done }}">
+                            <div class="progress-fill" style="width: {{ m.percent }}%;"></div>
+                        </div>
+                        <span class="progress-label">{{ m.done }} / {{ m.total }} selesai</span>
+                        <ul class="subtask-list">
+                            {% for task in m.tasks %}
+                            <li class="subtask{% if task.is_completed %} done{% endif %}">
+                                <strong>{{ task.get_task_type_display }}</strong>
+                                {% if task.is_completed %}
+                                <span class="badge-done">&#10003; Selesai</span>
+                                {% else %}
+                                <form method="POST" action="{% url 'schedules:complete_task' task.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn-done btn-small">Tandai Selesai</button>
+                                </form>
+                                {% endif %}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </dialog>
                 {% endfor %}
             {% endif %}
             {% if needs_plant %}
@@ -255,13 +352,40 @@
         setTimeout(function () { window.location.reload(); }, msUntilMidnight());
     })();
 
-    // Reminder jam 18:00: sisa detik dihitung server (sesuai TIME_ZONE Django),
+    // Reminder jam 18:00: sisa detik dihitung server "(sesuai TIME_ZONE Django)",
     // jadi tidak bergantung pada jam/zona waktu browser.
     (function () {
         var card = document.getElementById('reminder-card');
         var wait = {{ reminder_wait }};
         if (card && card.hidden && wait > 0) {
             setTimeout(function () { card.hidden = false; }, wait * 1000);
+        }
+    })();
+
+    // Pop-up Details tiap misi tanaman (elemen <dialog> bawaan browser).
+    (function () {
+        var dialogs = document.querySelectorAll('.mission-dialog');
+
+        document.querySelectorAll('[data-open-mission]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var d = document.getElementById(btn.dataset.openMission);
+                if (d && d.showModal) d.showModal();
+            });
+        });
+        dialogs.forEach(function (d) {
+            d.addEventListener('click', function (e) { if (e.target === d) d.close(); }); // klik area gelap
+            d.querySelectorAll('[data-close]').forEach(function (b) {
+                b.addEventListener('click', function () { d.close(); });
+            });
+        });
+
+        // Setelah "Tandai Selesai" halaman dimuat ulang; buka lagi pop-up tanaman tadi.
+        var open = new URLSearchParams(window.location.search).get('open');
+        if (open) {
+            dialogs.forEach(function (d) {
+                if (d.dataset.plant === open && d.showModal) d.showModal();
+            });
+            history.replaceState(null, '', window.location.pathname);
         }
     })();
 
@@ -289,7 +413,7 @@
                     btn.disabled = false;
                     btn.textContent = 'Expand More';
                 } else {
-                    btn.hidden = true;  // tidak ada log lagi
+                    btn.hidden = true;  // When no more log to be expanded, just hide the button
                 }
             })
             .catch(function () {
