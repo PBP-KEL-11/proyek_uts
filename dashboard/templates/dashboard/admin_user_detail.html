@@ -1,0 +1,25 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block meta %}
+    <title> Garden Plant - {{garden_plant.user}}</title>
+{% endblock meta %}
+
+{%block content%}
+        <main class="greentrack-details-main">
+            {% for plant in garden_plant %}
+          <section class="gardenplant-details-section">
+            <div class="gardenplant-details-container">
+                <div class="gardenplant-details-image">
+                    <img class="plant-image" src={{plant.plant.thumbnail}}>
+                </div>
+
+                <div class="gardenplant-details-detail">
+                    <h2 class="gardenplant-detail-common-name">{{plant.plant.common_name}}</h2>
+                    <h3 class="gardenplant-detail-scientific-name">{{plant.plant.scientific_name}}</h3>
+                    <p class="gardenplant-detail-user">Dimiliki oleh: {{plant.user}}</p>
+                    <p class="gardenplant-detail-user">Ditambahkan pada: {{plant.added_at}}</p>
+                </div>
+            </div>
+          </section>  
+          {% endfor %}
+        </main>
+{%endblock content%}

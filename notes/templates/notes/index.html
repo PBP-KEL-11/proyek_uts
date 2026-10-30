@@ -1,0 +1,97 @@
+{% extends 'notes/base_notes.html' %}
+{% load static %}
+{% block content %}
+<div class="notes-page">
+  <div class="n-head">
+    <div>
+      <h1>Jurnal Tanamanku</h1>
+      <p class="n-sub">Catat progres dan kejadian penting tiap tanamanmu.</p>
+    </div>
+    <button type="button" id="open-modal" class="n-btn p">+ Tambah Catatan</button>
+  </div>
+
+  {# Pencarian lewat AJAX (tanpa reload). Tidak perlu tombol submit. #}
+  <div class="n-search" role="search">
+    <label for="q" style="position:absolute;left:-9999px">Cari catatan</label>
+    <input id="q" class="in" type="search" autocomplete="off" placeholder="Cari judul, tanaman, atau lokasi">
+  </div>
+
+  <div class="n-chips" id="chips">
+    <button type="button" class="n-chip on" data-category="">Semua</button>
+    {% for value, label in categories %}
+      <button type="button" class="n-chip" data-category="{{ value }}">{{ label }}</button>
+    {% endfor %}
+  </div>
+
+  {# Tempat tiga kondisi: loading / kosong / error / daftar #}
+  <div id="notes-state" aria-live="polite"></div>
+  <div id="notes-grid" class="n-grid"></div>
+</div>
+
+{# ---------- Modal tambah catatan ---------- #}
+<dialog id="note-modal" class="n-modal">
+  <div id="modal-toast-wrap" class="n-modal-toast-wrap" aria-live="assertive"></div>
+
+  <form id="note-form" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    <div class="n-modal-head">
+      <h2>Tambah Catatan</h2>
+      <button type="button" class="n-x" id="close-modal" aria-label="Tutup">&times;</button>
+    </div>
+
+    <div class="n-field" data-field="plant_name">
+      <label for="{{ form.plant_name.id_for_label }}">Nama tanaman</label>
+      {{ form.plant_name }}<span class="n-err"></span>
+    </div>
+    <div class="n-field" data-field="title">
+      <label for="{{ form.title.id_for_label }}">Judul catatan</label>
+      {{ form.title }}<span class="n-err"></span>
+    </div>
+
+    <div class="n-field" data-field="category">
+      <label>Kategori</label>
+      <div class="n-radios">
+        {% for radio in form.category %}<label>{{ radio.tag }}<span>{{ radio.choice_label }}</span></label>{% endfor %}
+      </div>
+      <span class="n-err"></span>
+    </div>
+
+    <div class="n-two">
+      <div class="n-field" data-field="status">
+        <label for="{{ form.status.id_for_label }}">Status</label>{{ form.status }}<span class="n-err"></span>
+      </div>
+      <div class="n-field" data-field="planting_method">
+        <label for="{{ form.planting_method.id_for_label }}">Metode tanam</label>{{ form.planting_method }}<span class="n-err"></span>
+      </div>
+    </div>
+
+    <div class="n-field" data-field="planted_date">
+      <label for="{{ form.planted_date.id_for_label }}">Tanggal tanam</label>{{ form.planted_date }}<span class="n-err"></span>
+    </div>
+    <div class="n-field" data-field="location">
+      <label for="{{ form.location.id_for_label }}">Lokasi tanaman</label>{{ form.location }}<span class="n-err"></span>
+    </div>
+    <div class="n-field" data-field="content">
+      <label for="{{ form.content.id_for_label }}">Isi catatan</label>{{ form.content }}<span class="n-err"></span>
+    </div>
+    <div class="n-field" data-field="image">
+      <label for="{{ form.image.id_for_label }}">Foto tanaman (JPG atau PNG, maks. 2 MB)</label>
+      {{ form.image }}<span class="n-err"></span>
+    </div>
+
+    <div class="n-modal-foot">
+      <button type="button" class="n-btn o" id="cancel-modal">Batal</button>
+      <button type="submit" class="n-btn p" id="submit-btn">Simpan Catatan</button>
+    </div>
+  </form>
+</dialog>
+
+{# Wadah toast #}
+<div id="toast-wrap" class="n-toast-wrap" aria-live="assertive"></div>
+
+{# URL endpoint dikirim ke JS lewat data-attribute #}
+<div id="notes-config" hidden
+     data-list-url="{% url 'notes:api_list' %}"
+     data-add-url="{% url 'notes:api_create' %}"></div>
+<script src="{% static 'notes/js/notes.js' %}"></script>
+{% endblock %}

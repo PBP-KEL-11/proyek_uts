@@ -1,0 +1,61 @@
+{% extends 'notes/base_notes.html' %}
+{% load static %}
+{% block content %}
+<div class="notes-page n-form">
+  <a href="{% url 'notes:index' %}" style="color:#347338;font-weight:600;text-decoration:none">&larr; Kembali ke jurnal</a>
+  <h1 style="font-size:32px">{{ judul }}</h1>
+
+  {# enctype WAJIB untuk upload gambar #}
+  <form id="note-page-form" method="post" enctype="multipart/form-data" novalidate
+        data-action-label="{% if note %}menyimpan{% else %}menambahkan{% endif %} catatan"
+        data-has-image="{% if note and note.image %}1{% else %}0{% endif %}"
+        style="display:flex;flex-direction:column;gap:20px">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    <div class="n-sec"><div class="t">Detail catatan</div>
+      <div class="n-field" data-field="plant_name"><label for="{{ form.plant_name.id_for_label }}">Nama tanaman</label>{{ form.plant_name }}<span class="n-err">{{ form.plant_name.errors }}</span></div>
+      <div class="n-field" data-field="title"><label for="{{ form.title.id_for_label }}">Judul catatan</label>{{ form.title }}<span class="n-err">{{ form.title.errors }}</span></div>
+    </div>
+
+    <div class="n-sec" data-field="category"><div class="t">Kategori</div>
+      <div class="n-radios">
+        {% for radio in form.category %}<label>{{ radio.tag }}<span>{{ radio.choice_label }}</span></label>{% endfor %}
+      </div>
+      <span class="n-err">{{ form.category.errors }}</span>
+    </div>
+
+    <div class="n-sec"><div class="t">Status &amp; penanaman</div>
+      <div class="n-two">
+        <div class="n-field" data-field="status"><label for="{{ form.status.id_for_label }}">Status</label>{{ form.status }}<span class="n-err">{{ form.status.errors }}</span></div>
+        <div class="n-field" data-field="planting_method"><label for="{{ form.planting_method.id_for_label }}">Metode tanam</label>{{ form.planting_method }}<span class="n-err">{{ form.planting_method.errors }}</span></div>
+      </div>
+      <div class="n-field" data-field="planted_date"><label for="{{ form.planted_date.id_for_label }}">Tanggal tanam</label>{{ form.planted_date }}<span class="n-err">{{ form.planted_date.errors }}</span></div>
+    </div>
+
+    <div class="n-sec"><div class="t">Lokasi &amp; catatan</div>
+      <div class="n-field" data-field="location"><label for="{{ form.location.id_for_label }}">Lokasi tanaman</label>{{ form.location }}<span class="n-err">{{ form.location.errors }}</span></div>
+      <div class="n-field" data-field="content"><label for="{{ form.content.id_for_label }}">Isi catatan</label>{{ form.content }}<span class="n-err">{{ form.content.errors }}</span></div>
+    </div>
+
+    <div class="n-sec"><div class="t">Foto tanaman</div>
+      <div class="n-drop" data-field="image">
+        {% if note and note.image %}<img src="{{ note.image.url }}" alt="Foto saat ini">{% endif %}
+        <label for="{{ form.image.id_for_label }}" style="font-weight:600;color:#134023">Pilih foto dari perangkat (JPG atau PNG, maks. 2 MB)</label>
+        {{ form.image }}
+        <span class="n-err">{{ form.image.errors }}</span>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px">
+      <a href="{% url 'notes:index' %}" class="n-btn o" style="flex:1">Batal</a>
+      <button type="submit" class="n-btn p" style="flex:2">Simpan Catatan</button>
+    </div>
+  </form>
+</div>
+
+{# Wadah toast + pesan error dari server (dipakai bila form tidak valid) #}
+<div id="toast-wrap" class="n-toast-wrap" aria-live="assertive"></div>
+{% if toast_error %}{{ toast_error|json_script:"server-toast" }}{% endif %}
+<script src="{% static 'notes/js/note_form.js' %}"></script>
+{% endblock %}

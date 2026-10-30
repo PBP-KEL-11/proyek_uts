@@ -1,0 +1,59 @@
+{% load static %}
+
+<style>
+    /* toast */
+    .toast-component {
+        position: fixed;
+        inset: auto 2rem 2rem auto;
+        margin: 0;
+        padding: 1rem 1.5rem;
+        box-shadow: 0 10px 25px rgba(28, 25, 23, 0.15);
+        display: none;
+        align-items: center;
+        gap: 1rem;
+        transition: all 0.3s ease;
+        border: 1px solid var(--line);
+        background-color: rgba(240, 248, 255, 0.5);
+        color: inherit;
+    }
+
+    .toast-component:popover-open {
+        display: flex;
+    }
+
+    .toast-hidden {
+        opacity: 0;
+        transform: translateY(150%);
+        pointer-events: none;
+    }
+
+    .toast-show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .toast-title {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 0.15rem;
+        font-family: "Poppins", -apple-system, sans-serif;
+    }
+
+    .toast-message {
+        font-size: 0.85rem;
+    }
+
+    /* Modifikasi border kiri berdasarkan tipe notifikasi */
+    .toast-success { border-left: 4px solid #22c55e; }
+    .toast-error { border-left: 4px solid #b42318; }
+    .toast-normal { border-left: 4px solid; }
+
+</style>
+
+<div id="toast-component" class="toast-component toast-hidden" popover="manual">
+    <div class="toast-content">
+        <h3 id="toast-title" class="toast-title">This is a Sample Title</h3>
+        <p id="toast-message" class="toast-message">This is a Sample Message</p>
+    </div>
+</div>
+<script src="{% static 'js/main/toast.js' %}"></script>

@@ -1,0 +1,100 @@
+{% extends 'authentication/base_authentication.html' %}
+
+{% block title %}Login | Tanamin{% endblock %}
+{% block heading %}Masuk Akun{% endblock %}
+
+{% block visual_text %}
+    <div class="visual-text">
+        <p class="visual-lead">Selamat datang kembali di Tanamin.</p>
+        <p>Mari mulai lagi langkahmu menuju terciptanya rimbun dan cantiknya hijau dedaunan yang tumbuh dari setiap tanaman yang kamu rawat.</p>
+        <p>Semoga perjalanannya tetap menyenangkan.</p>
+        <p>Dan semangatmu masih sama seperti semula.</p>
+        <br>
+        <p class="visual-sign">
+            <span>Salam Hangat,</span>
+            <span>Tanamin</span>
+        </p>
+    </div>
+{% endblock visual_text %}
+
+{% block card_content %}
+    <form method="POST" class="auth-form" id="loginForm">
+        {% csrf_token %}
+        {% include 'authentication/_form_fields.html' %}
+        <button type="submit" class="btn-login-submit">Login</button>
+    </form>
+
+    <a href="{% url 'password_reset' %}" class="link-forgot">Forgot Password?</a>
+{% endblock %}
+
+{% block below_card %}
+    <p class="login-register">
+        Belum memiliki akun?
+        <a href="{% url 'authentication:register' %}">Register</a>
+    </p>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const loginForm = document.getElementById("loginForm");
+
+function clearErrors() {
+    loginForm.querySelectorAll(".form-error").forEach(el => el.remove());
+}
+
+function showError(message, input) {
+    const div = document.createElement("div");
+    div.className = "form-error";
+    div.textContent = message;                       // textContent: aman dari XSS
+    if (input) input.closest(".auth-field").appendChild(div);
+    else loginForm.prepend(div);                    
+}
+
+loginForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    clearErrors();
+
+    const button = loginForm.querySelector('button[type="submit"]');
+    button.disabled = true;
+
+    const csrfToken = loginForm.querySelector("[name=csrfmiddlewaretoken]").value;
+
+    try {
+        const res = await fetch("{% url 'authentication:login_user' %}", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": csrfToken,
+                "X-Requested-With": "XMLHttpRequest"
+            },
+            body: new FormData(loginForm)
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+            if (res.ok) {
+                sessionStorage.setItem('toast', JSON.stringify ({
+                    title: 'Berhasil', message: data.message, type: data.status
+                }));
+            }
+        }
+
+        if (data.status === "success") {
+            window.location.href = data.redirect_url;
+            return;
+        }
+
+        Object.entries(data.errors || {}).forEach(([name, errs]) => {
+            const input = loginForm.querySelector(`[name="${name}"]`);
+            errs.forEach(err => showError(err.message, input));
+        });
+
+        if (!data.errors) showError(data.message || "Login gagal. Coba lagi.");
+    } catch (err) {
+        showError("Terjadi kesalahan jaringan. Coba lagi.");
+    } finally {
+        button.disabled = false;
+    }
+});
+</script>
+{% endblock extra_js %}

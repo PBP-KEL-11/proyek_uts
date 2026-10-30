@@ -1,0 +1,112 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block meta %}
+    <title>Dashboard Admin</title>
+{% endblock meta %}
+{% block content %}
+    <main class="dashboard-main">
+
+            <h1 class="admin-dashboard-title"> PEMAIN GREENTRACK</h1>
+            
+            <section class="search-section">
+                <form method="get" class="search-form" id="search-form">
+                    <input type="search"
+                    id="search-input" 
+                    value="{{ query }}"
+                    class="search-form__input"
+                    aria-label="Cari Pengguna"
+                    placeholder="Cari Nama Pengguna">
+                    <button type="submit" class="btn-primary">Search</button>
+                </form>
+            </section>
+
+            <section class="card-grid-section">
+                <div class="card-grid-container">
+                    <div class="column-name">
+                        <p>USERNAME</p>
+                        <p>LEVEL</p>
+                        <p>GELAR</p>
+                        <p>BADGE AKTIF</p>
+                    </div>
+                    <div id="grid">
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <script>
+        const DATA = "{% url 'dashboard:get_greentrack_json' %}";
+        let abortController;
+
+        const gridContainer = document.getElementById("grid");
+        const searchForm = document.getElementById("search-form");
+        const searchInput = document.getElementById("search-input");
+
+        const TIMER = 250;
+        let searchDebouncer;
+
+        function displayPage(){}
+
+        function buildCard(data){
+            const greentrack = data.fields;
+            const greentrack_user = data.pk;
+
+            const cardElement = document.createElement('div');
+
+            const fullCardHtml = `
+            <div class="card-container" onclick="location.href='/dashboard/admin-greentrack-details/${greentrack_user}';" style="cursor:pointer;">
+            <p class="profile-name"> ${greentrack.username} </p>
+            <p class="profile-level-number"> Lvl ${greentrack.level_number}</p>
+            <p class="profile-level-name">${greentrack.current_level}</p>
+            <p class="profile-badge">${greentrack.active_badge} </p>
+            </div>`;
+
+            cardElement.innerHTML = fullCardHtml;
+            return cardElement;
+        }
+
+        async function getGreenTracks(query=""){
+            if(abortController) abortController.abort();
+            abortController = new AbortController();
+
+            try{
+                const url = query ?`${DATA}?user=${query}` : DATA;
+                const response = await fetch(url, {
+                    headers: {'Accept':'application/json'},
+                    signal: abortController.signal,
+                });
+
+                const greentrack_data = await response.json();
+                gridContainer.innerHTML = '';
+                greentrack_data.forEach(data => {
+                    gridContainer.appendChild(buildCard(data))
+                });
+            }
+            catch(error){
+                if(error.name === 'AbortError') return;
+                console.error('Error loading projects', error);
+            }
+        }
+
+        function searchUser(){
+            getGreenTracks(searchInput.value.trim());
+        }
+
+        searchInput.addEventListener("input", function(){
+            clearTimeout(searchDebouncer);
+            searchDebouncer = setTimeout( function(){searchUser()}, DEBOUNCE_TIMER);
+        })
+
+        searchForm.addEventListener("submit", function(event){
+            event.preventDefault();
+            clearTimeout(searchDebouncer);
+            searchUser();
+        })
+
+        getGreenTracks(searchInput.value.trim());
+    </script>
+
+{% endblock content %}
+
+
+
