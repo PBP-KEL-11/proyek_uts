@@ -1,0 +1,25 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block meta %}
+    <title> Daftar Greentrack </title>
+{% endblock meta %}
+
+{% block content %}
+    <main class="dashboard-main">
+        <section class="register-greentrack">
+        <div class="register-greentrack-container">
+            <h2>Buat Greentrack</h2>
+        <form method="post" action="{% url "dashboard:create_greentrack" %}" class="register-greentrack-form">
+            {% for field in form %}
+            {% csrf_token %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                </div>
+            {% endfor %}
+            <button type="submit" class="btn-secondary">Daftar</button>
+        </form>
+    </div>
+    </section>
+    </main>
+{% endblock content %}
+
