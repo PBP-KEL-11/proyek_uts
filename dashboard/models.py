@@ -1,6 +1,5 @@
 from django.db import models
 from django.conf import settings
-from plants.models import GardenPlant
 # Create your models here.
 
 class GreenTrack(models.Model):
@@ -26,13 +25,41 @@ class GreenTrack(models.Model):
              5000]
     
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, primary_key=True)
-    personal_plant = models.OneToOneField(GardenPlant, on_delete=models.PROTECT, null=True)
     current_xp = models.IntegerField(default=0)
     xp_max = models.IntegerField(default=XPMAX[0])
     level_number = models.IntegerField(default=1)
     current_level = models.CharField(default=LEVELS[0])
     active_badge = models.CharField(default="Tidak Ada Badge Aktif")
-    streak = models.IntegerField(default=0)
-    carbon_absorption = models.FloatField(default=0.0)
     greentrack_nickname = models.CharField(max_length=20, null=True)
     greentrack_description = models.TextField(null=True)
+      
+    def level_up(self):
+        if self.current_level != self.LEVELS[6]:
+            self.current_level = self.LEVELS[self.level_number]
+            self.xp_max = self.XPMAX[self.level_number]
+            self.level_number+=1
+    
+    def add_xp(self):
+        self.current_xp+=100;
+        if self.current_xp>=self.xp_max:
+            self.level_up()
+            
+        if self.level_number == 6 and self.current_xp >= 1500:
+            self.active_badge = self.BADGES[3]
+            
+        if self.level_number == 4 and self.current_xp >= 900:
+            self.active_badge = self.BADGES[2]
+                            
+        if self.level_number == 2 and self.current_xp >= 400:
+            self.active_badge = self.BADGES[1]
+                            
+        if self.level_number == 1 and self.current_xp >= 200:
+            self.active_badge = self.BADGES[0]
+                    
+        
+                    
+        
+        
+            
+            
+    

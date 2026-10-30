@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from .models import PlantTask
 from .services import generate_daily_tasks, get_user_plant_names
-
+from dashboard.views import gain_experience
 @login_required
 def schedule_dashboard(request):
     today = timezone.localdate()
@@ -27,4 +27,5 @@ def complete_task(request, task_id):
         task = get_object_or_404(PlantTask, id=task_id, user=request.user)
         if not task.is_completed:
             task.mark_as_done()
+            gain_experience(request)
     return redirect('schedules:index')
