@@ -7,7 +7,7 @@ from .models import PlantTask
 
 def get_user_plant_names(user):
     names = (
-        Note.objects.filter(user=user)
+        Note.objects.filter(garden_plant__user=user)
         .exclude(status=Note.Status.DONE)
         .values_list('plant_name', flat=True)
         .distinct()
