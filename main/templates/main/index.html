@@ -1,169 +1,120 @@
 {% load static %}
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Tanamin</title>
 
-    <link rel="stylesheet" href="{% static 'css/main/style.css' %}">
-</head>
+    <link rel="stylesheet" href="{% static 'css/main/style.css' %}" />
+  </head>
 
-<body>
-
+  <body>
     <script src="{% static 'js/main/script.js' %}"></script>
 
     <header class="site-header">
-        <div class="container">
+      <div class="container">
+        <!-- Brand -->
+        <a href="{% url 'main:show_main' %}" class="brand"> {{ name }} </a>
 
-            <!-- Brand -->
-            <a href="{% url 'main:show_main' %}" class="brand">
-                {{ name }}
-            </a>
+        <!-- Navigation -->
+        <nav class="nav-menu">
+          {% if user.is_authenticated %}
+          <a href="{% url 'notes:index' %}"> Jurnal </a>
 
-            <!-- Navigation -->
-            <nav class="nav-menu">
+          <a href="{% url 'schedules:index' %}"> Schedule </a>
 
-                {% if user.is_authenticated %}
-                    <a href="{% url 'notes:index' %}">
-                        Jurnal
-                    </a>
+          <a href="{% url 'plants:species_list' %}"> Tanaman </a>
 
-                    <a href="{% url 'schedules:index' %}">
-                        Schedule
-                    </a>
+          <a href="{% url 'dashboard:index' %}"> Kebun Saya </a>
 
-                    <a href="{% url 'plants:species_list' %}">
-                        Plants
-                    </a>
+          <a href="{% url 'authentication:profile' %}" class="btn-login">
+            Profile
+          </a>
 
-                    <a href="{% url 'dashboard:index' %}">
-                        Dashboard
-                    </a>
+          <a href="{% url 'authentication:logout_user' %}" class="btn-register">
+            Logout
+          </a>
 
-                
+          {% else %}
 
-                    <a href="{% url 'authentication:profile' %}"
-                       class="btn-login">
-                        Profile
-                    </a>
+          <a href="{% url 'authentication:login_user' %}" class="btn-login">
+            Login
+          </a>
 
-                    <a href="{% url 'authentication:logout_user' %}"
-                       class="btn-register">
-                        Logout
-                    </a>
+          <a href="{% url 'authentication:register' %}" class="btn-register">
+            Register
+          </a>
 
-                {% else %}
-
-                    <a href="{% url 'authentication:login_user' %}"
-                       class="btn-login">
-                        Login
-                    </a>
-
-                    <a href="{% url 'authentication:register' %}"
-                       class="btn-register">
-                        Register
-                    </a>
-
-                {% endif %}
-
-            </nav>
-
-        </div>
+          {% endif %}
+        </nav>
+      </div>
     </header>
 
-
-{% if messages %}
-    {% for message in messages %}
-        <script>
-            alert("{{ message }}");
-        </script>
-    {% endfor %}
-{% endif %}
-
-
+    {% if messages %} {% for message in messages %}
+    <script>
+      alert("{{ message }}");
+    </script>
+    {% endfor %} {% endif %}
 
     <main>
+      <section class="hero">
+        <div class="hero-content">
+          {% if user.is_authenticated %}
 
-        <section class="hero">
+          <p class="hero-greeting">
+            Halo, {{ user.username }}!
+            <br />
+            Welcome back to
+          </p>
 
-            <div class="hero-content">
+          <h1>Tanamin!</h1>
 
-                {% if user.is_authenticated %}
+          <p class="hero-description">
+            Ubah sudut apartemen dan teras rumah menjadi oasis hijauyang subur.
+            Tanamin membantu kamu merawat tanaman dengan pengingat yang sesuai
+            kebutuhan, serta membuat setiap langkah perawatan terasa lebih
+            menyenangkan.
+          </p>
 
-                    <p class="hero-greeting">
-                        Halo, {{ user.username }}!
-                        <br>
-                        Welcome back to
-                    </p>
+          <div class="hero-actions">
+            <a href="{% url 'dashboard:index' %}" class="btn-primary">
+              My Plants
+            </a>
 
-                    <h1>
-                         Tanamin!
-                    </h1>
+            <a href="{% url 'schedules:index' %}" class="btn-secondary">
+              View Schedule
+            </a>
+          </div>
 
-                    <p class="hero-description">
-                        Ubah sudut apartemen dan teras rumah menjadi oasis hijauyang subur. 
-                        Tanamin membantu kamu merawat tanaman dengan pengingat yang sesuai kebutuhan,
-                        serta membuat setiap langkah perawatan terasa lebih menyenangkan.
-                    </p>
+          {% else %}
 
-                    <div class="hero-actions">
-                        <a href="{% url 'plants:species_list' %}"
-                           class="btn-primary">
-                            My Plants
-                        </a>
+          <p class="hero-greeting">Welcome to</p>
 
-                        <a href="{% url 'schedules:index' %}"
-                           class="btn-secondary">
-                            View Schedule
-                        </a>
-                    </div>
+          <h1>Tanamin</h1>
 
-                {% else %}
+          <p class="hero-description">
+            Ubah sudut apartemen dan teras rumah menjadi oasis hijauyang subur.
+            Tanamin membantu kamu merawat tanaman dengan pengingat yang sesuai
+            kebutuhan, serta membuat setiap langkah perawatan terasa lebih
+            menyenangkan.
+          </p>
 
-                    <p class="hero-greeting">
-                        Welcome to
-                    </p>
+          <div class="hero-actions">
+            <a href="{% url 'authentication:register' %}" class="btn-primary">
+              Get Started
+            </a>
+          </div>
 
-                    <h1>
-                        Tanamin
-                    </h1>
-
-                    <p class="hero-description">
-                        Ubah sudut apartemen dan teras rumah menjadi oasis hijauyang subur. 
-                        Tanamin membantu kamu merawat tanaman dengan pengingat yang sesuai kebutuhan,
-                        serta membuat setiap langkah perawatan terasa lebih menyenangkan.
-                    </p>
-
-                    <div class="hero-actions">
-
-                        <a href="{% url 'authentication:register' %}" class="btn-primary">
-                            Get Started
-                        </a>
-
-                    </div>
-
-                {% endif %}
-
-            </div>
-
-        </section>
-
+          {% endif %}
+        </div>
+      </section>
     </main>
 
-
-
-
     <footer class="site-footer">
-
-        <p>
-            © 2026 Tanamin. Grow better, together.
-        </p>
-
+      <p>© 2026 Tanamin. Grow better, together.</p>
     </footer>
-
-</body>
+  </body>
 </html>
