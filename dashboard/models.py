@@ -38,23 +38,22 @@ class GreenTrack(models.Model):
             self.current_level = self.LEVELS[self.level_number]
             self.xp_max = self.XPMAX[self.level_number]
             self.level_number+=1
-            self.current_xp = 0
     
     def add_xp(self):
         self.current_xp+=100;
         if self.current_xp>=self.xp_max:
             self.level_up()
             
-        if self.level_number >= 6 and self.current_xp >= 1500:
+        if self.level_number == 6 and self.current_xp >= 1500:
             self.active_badge = self.BADGES[3]
             
-        if self.level_number >= 4 and self.current_xp >= 900:
+        if self.level_number == 4 and self.current_xp >= 900:
             self.active_badge = self.BADGES[2]
                             
-        if self.level_number >= 2 and self.current_xp >= 400:
+        if self.level_number == 2 and self.current_xp >= 400:
             self.active_badge = self.BADGES[1]
                             
-        if self.level_number >= 1 and self.current_xp >= 200:
+        if self.level_number == 1 and self.current_xp >= 200:
             self.active_badge = self.BADGES[0]
                     
         

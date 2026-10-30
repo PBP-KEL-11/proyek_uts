@@ -257,7 +257,7 @@
     border-radius: 4px;
     height: 225px;
     width: 400px;
-    margin-left: 480px;
+    justify-self: center;
     font-size: 25px;
 }
 
@@ -443,6 +443,16 @@
     color: var(--neutral);
     font-size: 20px;
     font-weight: 200;
+}
+
+@media(max-width:640px){
+    .card-container{
+        width: 500px;
+    }
+    .dashboard-main, .greentrack-details-main{
+        width: 500px;
+    }
+    
 }
 
 
