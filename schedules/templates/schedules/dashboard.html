@@ -128,6 +128,23 @@
     .log-table tr:last-child td {
         border-bottom: none;
     }
+    .btn-more {
+        display: block;
+        margin: 16px auto 0;
+        padding: 10px 24px;
+        background-color: #ffffff;
+        color: #134023;
+        border: 1px solid #347338;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    .btn-more:hover { background-color: #EAF2EB; }
+    .btn-more:disabled { opacity: 0.6; cursor: wait; }
+    .btn-more[hidden] { display: none; }
     .badge-task {
         background-color: #D2E3D0;
         color: #134023;
@@ -208,22 +225,22 @@
                     <th>Tanggal Selesai</th>
                 </tr>
             </thead>
-            <tbody>
-                {% for log in care_logs %}
-                <tr>
-                    <td><strong>{{ log.plant_name }}</strong></td>
-                    <td><span class="badge-task">{{ log.get_task_type_display }}</span></td>
-                    <td>{{ log.completed_at|date:"d M Y, H:i" }}</td>
-                </tr>
-                {% empty %}
+            <tbody id="log-body">
+                {% if care_logs %}
+                    {% include 'schedules/_log_rows.html' with logs=care_logs %}
+                {% else %}
                 <tr>
                     <td colspan="3" class="empty-state" style="border:none;">
                         Belum ada riwayat perawatan. Selesaikan tugas harianmu dulu!
                     </td>
                 </tr>
-                {% endfor %}
+                {% endif %}
             </tbody>
         </table>
+        <button type="button" id="load-more-logs" class="btn-more"
+                data-url="{% url 'schedules:more_logs' %}"
+                data-offset="{{ log_initial }}"
+                {% if not has_more_logs %}hidden{% endif %}>Expand More</button>
     </div>
 </div>
 <script>
@@ -236,6 +253,50 @@
             return next - now;
         }
         setTimeout(function () { window.location.reload(); }, msUntilMidnight());
+    })();
+
+    // Reminder jam 18:00: sisa detik dihitung server (sesuai TIME_ZONE Django),
+    // jadi tidak bergantung pada jam/zona waktu browser.
+    (function () {
+        var card = document.getElementById('reminder-card');
+        var wait = {{ reminder_wait }};
+        if (card && card.hidden && wait > 0) {
+            setTimeout(function () { card.hidden = false; }, wait * 1000);
+        }
+    })();
+
+    // Plant Care Log: muat 20 log berikutnya tanpa reload halaman.
+    (function () {
+        var btn = document.getElementById('load-more-logs');
+        var body = document.getElementById('log-body');
+        if (!btn || !body) return;
+
+        btn.addEventListener('click', function () {
+            btn.disabled = true;
+            btn.textContent = 'Memuat...';
+            fetch(btn.dataset.url + '?offset=' + btn.dataset.offset, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                credentials: 'same-origin'
+            })
+            .then(function (res) {
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                return res.json();
+            })
+            .then(function (data) {
+                body.insertAdjacentHTML('beforeend', data.html);
+                btn.dataset.offset = data.next_offset;
+                if (data.has_more) {
+                    btn.disabled = false;
+                    btn.textContent = 'Expand More';
+                } else {
+                    btn.hidden = true;  // tidak ada log lagi
+                }
+            })
+            .catch(function () {
+                btn.disabled = false;
+                btn.textContent = 'Gagal memuat. Coba lagi';
+            });
+        });
     })();
 </script>
 {% endblock content %}

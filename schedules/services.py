@@ -8,11 +8,6 @@ from .models import PlantTask
 
 
 def get_user_plant_names(user):
-    """
-    Sumber daftar tanaman milik user.
-    Saat ini diambil dari catatan (Note) yang statusnya belum 'done'.
-    Kalau nanti modul Plants sudah punya model sendiri, cukup ganti isi fungsi ini.
-    """
     names = (
         Note.objects.filter(user=user)
         .exclude(status=Note.Status.DONE)
