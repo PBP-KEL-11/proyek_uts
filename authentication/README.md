@@ -3,18 +3,7 @@
 
 ## 1. Overview
 
-Modul ini menjadi gerbang pertama bagi user untuk bisa menggunakan fitur utama yang ada pada Tanamin.
-
-Pengguna diarahkan untuk mendaftar akun (Register). Apabila sudah memiliki akun, pengguna dapat
-
-langsung masuk ke halaman Login. Jika lupa password, akan diarahkan ke halaman Forgot Password
-
-untuk mengisi alamat email agar email resmi Tanamin dapat mengirimkan pesan email ke alamat email
-
-yang bersangkutan. Pesan email berisi tautan yang mengarahkan pengguna ke halaman Create New Password.
-
-Setelah berhasil, pengguna bisa kembali login dengan password yang terbaru. 
-
+Modul ini menjadi gerbang pertama bagi user untuk bisa menggunakan fitur utama yang ada pada Tanamin. Pengguna diarahkan untuk mendaftar akun (Register). Apabila sudah memiliki akun, pengguna dapat langsung masuk ke halaman Login. Jika lupa password, akan diarahkan ke halaman Forgot Password untuk mengisi alamat email agar email resmi Tanamin dapat mengirimkan pesan email ke alamat email yang bersangkutan. Pesan email berisi tautan yang mengarahkan pengguna ke halaman Create New Password. Setelah berhasil, pengguna bisa kembali login dengan password yang terbaru. 
 
 Jika ingin keluar dari Tanamin, pengguna bisa memencet tombol Logout untuk keluar akun.
 
@@ -24,7 +13,7 @@ Jika ingin keluar dari Tanamin, pengguna bisa memencet tombol Logout untuk kelua
 - User Registration
 - Login
 - Logout
-- Forgot Password
+- Reset Password
 
 
 ## 3. Technology Stack
@@ -75,11 +64,6 @@ Jika ingin keluar dari Tanamin, pengguna bisa memencet tombol Logout untuk kelua
 ## AI Disclosure
 
 Pengerjaan Modul Authentication ini dibantu oleh Claude.
+Pertanyaan yang diajukan seputar bagaimana cara agar pengguna bisa menggunggah foto profil di akun Tanamin. Apakah ada *dependecies* yang perlu di install dan sebagainya. Claude menjelaskan langkah
 
-Pertanyaan yang diajukan seputar mengenai bagaimana cara agar pengguna bisa menggunggah foto profil
-
-di akun Tanamin. Apakah ada *dependecies* yang perlu di install dan sebagainya. Kemudian mengenai
-
-bagaimana cara menyelesaikan konflik ketika merge di github. Juga menanyakan apakah sebaiknya
-
-base.html dipecah menjadi header.html dan footer.html agar file base.html tidak terlalu kompleks.
+Kemudian mengenai bagaimana cara menyelesaikan konflik ketika merge di github. Juga menanyakan apakah sebaiknya base.html dipecah menjadi header.html dan footer.html agar file base.html tidak terlalu kompleks.
