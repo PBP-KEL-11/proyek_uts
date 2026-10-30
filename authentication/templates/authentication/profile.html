@@ -1,45 +1,48 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Profile - Tanamin</title>
-</head>
+{% extends 'authentication/base_profile.html' %}
 
-<body>
+{% block title %}Profile | Tanamin{% endblock %}
 
-<h1>Profile</h1>
+{% block content %}
+<div class="profile-card">
 
-<p>
-    Username:
-    {{ user.username }}
-</p>
+    <h2 class="profile-title">Profile Account</h2>
 
-<p>
-    Email:
-    {{ user.email }}
-</p>
+    <div class="profile-card-body">
 
-<p>
-    First Name:
-    {{ user.first_name }}
-</p>
+        <div class="profile-avatar-container">
+            <div class="avatar-circle">
+                {% if user.photo %}
+                    <img src="{{ user.photo.url }}" alt="Foto profil" class="avatar-img">
+                {% else %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" class="lucide lucide-user-round preview-icon">
+                        <circle cx="12" cy="8" r="5"/>
+                        <path d="M20 21a8 8 0 0 0-16 0"/>
+                    </svg>
+                {% endif %}
+            </div>
+        </div>
 
-<p>
-    Last Name:
-    {{ user.last_name }}
-</p>
+        <div class="profile-form-details">
+            <div class="form-group-profile">
+                <label>Username</label>
+                <div class="form-value-box">{{ user.username }}</div>
+            </div>
+            <div class="form-group-profile">
+                <label>Email Address</label>
+                <div class="form-value-box">{{ user.email|default:"-" }}</div>
+            </div>
+            <div class="form-group-profile">
+                <label>First Name</label>
+                <div class="form-value-box">{{ user.first_name|default:"-" }}</div>
+            </div>
+            <div class="form-group-profile mb-large">
+                <label>Last Name</label>
+                <div class="form-value-box">{{ user.last_name|default:"-" }}</div>
+            </div>
+        </div>
 
-<p>
-    Role:
-    {{ user.role }}
-</p>
-
-<a href="{% url 'authentication:edit_profile' %}">
-    <button>Edit Profile</button>
-</a>
-
-<a href="{% url 'authentication:logout_user' %}">
-    <button>Logout</button>
-</a>
-
-</body>
-</html>
+    </div>
+</div>
+{% endblock content %}

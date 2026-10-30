@@ -1,30 +1,132 @@
-{% load static %}
+{% extends 'authentication/base_profile.html' %}
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Edit Profile - Tanamin</title>
-    <link rel="stylesheet" href="{% static 'authentication/style.css' %}">
-</head>
-</head>
+{% block title %}Edit Profile | Tanamin{% endblock %}
 
-<body>
-
-<h1>Edit Profile</h1>
-
-<form method="POST">
+{% block content %}
+<form method="POST" enctype="multipart/form-data" class="profile-card" id="editProfileForm">
     {% csrf_token %}
 
-    {{ form.as_p }}
+    <h2 class="profile-title">Profile Account</h2>
 
-    <button type="submit">
-        Save Changes
-    </button>
+    <div class="profile-card-body">
+
+        <!-- Avatar -->
+        <div class="profile-avatar-container">
+            <div class="avatar-circle">
+                {% if user.photo %}
+                    <img src="{{ user.photo.url }}" alt="Foto profil" class="avatar-img">
+                {% else %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" class="lucide lucide-user-round preview-icon">
+                        <circle cx="12" cy="8" r="5"/>
+                        <path d="M20 21a8 8 0 0 0-16 0"/>
+                    </svg>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="profile-form-details">
+
+            {% if form.non_field_errors %}
+                <div class="form-error">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            {% for field in form %}
+                <div class="form-group-profile">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <small class="form-help">{{ field.help_text|safe }}</small>
+                    {% endif %}
+                    {% if field.errors %}
+                        <div class="form-error">{{ field.errors }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <div class="profile-actions actions-end">
+                <button type="submit" class="btn-simpan">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7"/><path d="M7 3v4a1 1 0 0 0 1 1h7"/></svg>
+                    Simpan
+                </button>
+            </div>
+        </div>
+
+    </div>
 </form>
+{% endblock content %}
 
-<a href="{% url 'authentication:profile' %}">
-    Cancel
-</a>
+{% block extra_js %}
+<script>
+const editForm = document.getElementById("editProfileForm");
 
-</body>
-</html>
+function clearErrors() {
+    editForm.querySelectorAll(".form-error").forEach(el => el.remove());
+}
+
+function showError(message, input) {
+    const div = document.createElement("div");
+    div.className = "form-error";
+    div.textContent = message;                          // textContent: aman dari XSS
+
+    const group = input ? input.closest(".form-group-profile") : null;
+    if (group) group.appendChild(div);                  // error milik satu kolom
+    else editForm.querySelector(".profile-title").after(div);   // error umum
+}
+
+editForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    clearErrors();
+
+    const button = editForm.querySelector('button[type="submit"]');
+    button.disabled = true;
+
+    const csrfToken = editForm.querySelector("[name=csrfmiddlewaretoken]").value;
+
+    try {
+        const res = await fetch("{% url 'authentication:edit_profile' %}", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": csrfToken,
+                "X-Requested-With": "XMLHttpRequest"
+                // jangan set Content-Type sendiri: browser mengaturnya otomatis untuk FormData (file)
+            },
+            body: new FormData(editForm)
+        });
+
+        // sesi habis: login_required mengalihkan ke halaman login, bukan JSON
+        if (res.redirected) {
+            window.location.href = res.url;
+            return;
+        }
+
+        const data = await res.json();
+
+        if (res.ok) {
+            if (res.ok) {
+                sessionStorage.setItem('toast', JSON.stringify ({
+                    title: 'Berhasil', message: data.message, type: data.status
+                }));
+            }
+        }
+
+        if (data.status === "success") {
+            window.location.href = data.redirect_url;
+            return;
+        }
+
+        Object.entries(data.errors || {}).forEach(([name, errs]) => {
+            const input = editForm.querySelector(`[name="${name}"]`);
+            errs.forEach(err => showError(err.message, input));
+        });
+
+        if (!data.errors) showError(data.message || "Gagal menyimpan. Coba lagi.");
+    } catch (err) {
+        showError("Terjadi kesalahan jaringan. Coba lagi.");
+    } finally {
+        button.disabled = false;
+    }
+});
+</script>
+{% endblock extra_js %}
