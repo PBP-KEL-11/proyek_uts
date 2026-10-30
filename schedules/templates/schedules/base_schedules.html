@@ -1,0 +1,9 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Schedule | Tanamin{% endblock %}
+
+{# main/base.html sudah memuat Bootstrap, main/style.css, header, toast, dan footer tim. #}
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/schedules/style.css' %}">
+{% endblock %}
