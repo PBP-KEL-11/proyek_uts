@@ -33,6 +33,9 @@ PERENUAL_API_KEY = os.environ.get("PERENUAL_API_KEY", "")
 PRODUCTION = os.getenv('PRODUCTION', 'False').lower() == 'true'
 
 DEBUG = not PRODUCTION
+PRODUCTION = os.getenv('PRODUCTION', 'False').lower() == 'true'
+
+DEBUG = not PRODUCTION
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "finna-aprilia-tanamin.pws.cs.ui.ac.id"]
 
