@@ -28,8 +28,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-^by@wm*$j$5okm2s*n=++7i(_n+4frn0j3-c1ag!p#hke!2k(o'
 PERENUAL_API_KEY = os.environ.get("PERENUAL_API_KEY", "")
+
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+PRODUCTION = os.getenv('PRODUCTION', 'False').lower() == 'true'
+
+DEBUG = not PRODUCTION
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "finna-aprilia-tanamin.pws.cs.ui.ac.id"]
 
@@ -37,7 +40,13 @@ CSRF_TRUSTED_ORIGINS = [
     'https://finna-aprilia-tanamin.pws.cs.ui.ac.id',
 ]
 
-PRODUCTION = os.getenv('PRODUCTION', 'False').lower() == 'true'
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
+    'API_SECRET': os.getenv('CLOUDINARY_API_SECRET'),
+}
+USE_CLOUDINARY = PRODUCTION and all(CLOUDINARY_STORAGE.values())
 
 
 # Application definition
@@ -49,7 +58,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'main',
     'authentication',
     'phonenumber_field',
@@ -58,6 +66,9 @@ INSTALLED_APPS = [
     'plants',
     'dashboard',
 ]
+
+if USE_CLOUDINARY:
+    INSTALLED_APPS += ['cloudinary_storage', 'cloudinary']
 
 MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -72,6 +83,19 @@ MIDDLEWARE = [
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+STORAGES = {
+    "default": {
+        "BACKEND": (
+            "cloudinary_storage.storage.MediaCloudinaryStorage"
+            if USE_CLOUDINARY
+            else "django.core.files.storage.FileSystemStorage"
+        ),
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 ROOT_URLCONF = 'Tanamin.urls'
 
