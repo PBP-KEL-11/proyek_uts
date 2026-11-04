@@ -1,0 +1,7 @@
+{% for log in logs %}
+<tr>
+    <td><strong>{{ log.plant_name }}</strong></td>
+    <td><span class="badge-task">{{ log.get_task_type_display }}</span></td>
+    <td>{{ log.completed_at|date:"d M Y, H:i" }}</td>
+</tr>
+{% endfor %}

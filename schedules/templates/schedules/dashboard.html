@@ -1,131 +1,77 @@
-{% extends 'notes/base_notes.html' %}
+{% extends 'schedules/base_schedules.html' %}
 
 {% block content %}
-<style>
-    /* Styling khusus Modul 3 agar tidak merusak CSS milik tim */
-    .schedule-container {
-        width: 100%;
-        max-width: 900px;
-        margin: 40px auto;
-        box-sizing: border-box;
-        padding: 0 20px;
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        color: #11261A;
-    }
-    .schedule-section {
-        margin-bottom: 40px;
-    }
-    .schedule-title {
-        font-size: 24px;
-        font-weight: 700;
-        color: #134023;
-        margin-bottom: 20px;
-    }
-    .task-card {
-        background-color: #ffffff;
-        border: 1px solid #A5BF99;
-        border-radius: 12px;
-        padding: 20px;
-        margin-bottom: 15px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 20px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-    .task-info { flex: 1; min-width: 0; }
-    .task-info h3 {
-        margin: 0 0 5px 0;
-        color: #134023;
-        font-size: 18px;
-    }
-    .task-info p {
-        margin: 0;
-        font-size: 14px;
-        color: #555;
-    }
-    .btn-done {
-        background-color: #347338;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 8px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background-color 0.2s;
-        flex-shrink: 0;
-        white-space: nowrap;
-        font-family: inherit;
-        font-size: 16px;
-    }
-    .btn-done:hover {
-        background-color: #134023;
-    }
-    .task-card.done { opacity: 0.6; background-color: #F5F9F5; }
-    .task-card.done h3 { text-decoration: line-through; }
-    .badge-done { color: #347338; font-weight: 700; font-size: 14px; }
-    .empty-state {
-        text-align: center;
-        padding: 40px;
-        background-color: #F5F9F5;
-        border: 1px dashed #A5BF99;
-        border-radius: 12px;
-        color: #666;
-    }
-    .log-table {
-        width: 100%;
-        border-collapse: collapse;
-        background-color: #ffffff;
-        border-radius: 12px;
-        overflow: hidden;
-        border: 1px solid #A5BF99;
-    }
-    .log-table th {
-        background-color: #EAF2EB;
-        color: #134023;
-        text-align: left;
-        padding: 15px;
-        font-weight: 600;
-    }
-    .log-table td {
-        padding: 15px;
-        border-bottom: 1px solid #EAF2EB;
-        font-size: 14px;
-    }
-    .log-table tr:last-child td {
-        border-bottom: none;
-    }
-    .badge-task {
-        background-color: #D2E3D0;
-        color: #134023;
-        padding: 5px 12px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 700;
-    }
-</style>
 
 <div class="schedule-container">
     <!-- Bagian 1: Daily Task Dashboard -->
     <div class="schedule-section">
         <h1 class="schedule-title">Daily Tasks</h1>
         <div class="task-list">
-            {% for task in pending_tasks %}
-            <div class="task-card{% if task.is_completed %} done{% endif %}">
-                <div class="task-info">
-                    <h3>{{ task.plant_name }}</h3>
-                    <p>Tugas: <strong>{{ task.get_task_type_display }}</strong> &bull; {{ task.due_date|date:"d M Y" }}</p>
-                </div>
-                {% if task.is_completed %}
-                <span class="badge-done">&#10003; Selesai</span>
-                {% else %}
-                <form method="POST" action="{% url 'schedules:complete_task' task.id %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn-done">Tandai Selesai</button>
-                </form>
-                {% endif %}
+            {% if missed_message %}
+            <div class="task-card missed">
+                <span class="status-icon" aria-hidden="true">&#9888;&#65039;</span>
+                <div class="task-info"><h3>{{ missed_message }}</h3></div>
             </div>
-            {% endfor %}
+            {% endif %}
+            {% if all_completed %}
+            <div class="task-card all_completed">
+                <span class="status-icon" aria-hidden="true">&#127793;</span>
+                <div class="task-info"><h3>{{ all_completed_message }}</h3></div>
+            </div>
+            {% else %}
+                <div id="reminder-card" class="task-card not_completed" {% if not show_reminder %}hidden{% endif %}>
+                    <span class="status-icon" aria-hidden="true">&#128276;</span>
+                    <div class="task-info"><h3>{{ reminder_message }}</h3></div>
+                </div>
+                {% for m in missions %}
+                <div class="task-card mission{% if m.is_complete %} is-complete{% endif %}">
+                    <div class="task-info">
+                        <h3>{{ m.plant_name }}</h3>
+                        {% if m.is_complete %}
+                        <p class="badge-done">&#10003; Semua tugas selesai</p>
+                        {% else %}
+                        <p>Perawatan harian &bull; {{ today|date:"d M Y" }}</p>
+                        <div class="progress" role="progressbar" aria-valuemin="0"
+                             aria-valuemax="{{ m.total }}" aria-valuenow="{{ m.done }}">
+                            <div class="progress-fill" style="width: {{ m.percent }}%;"></div>
+                        </div>
+                        <span class="progress-label">{{ m.done }} / {{ m.total }} selesai</span>
+                        {% endif %}
+                    </div>
+                    <button type="button" class="btn-done{% if m.is_complete %} btn-outline{% endif %}"
+                            data-open-mission="mission-{{ forloop.counter }}">Details</button>
+                </div>
+
+                <dialog class="mission-dialog" id="mission-{{ forloop.counter }}" data-plant="{{ m.plant_name }}">
+                    <div class="dialog-inner">
+                        <div class="dialog-head">
+                            <h3>{{ m.plant_name }}</h3>
+                            <button type="button" class="dialog-close" data-close aria-label="Tutup">&times;</button>
+                        </div>
+                        <div class="progress" role="progressbar" aria-valuemin="0"
+                             aria-valuemax="{{ m.total }}" aria-valuenow="{{ m.done }}">
+                            <div class="progress-fill" style="width: {{ m.percent }}%;"></div>
+                        </div>
+                        <span class="progress-label">{{ m.done }} / {{ m.total }} selesai</span>
+                        <ul class="subtask-list">
+                            {% for task in m.tasks %}
+                            <li class="subtask{% if task.is_completed %} done{% endif %}">
+                                <strong>{{ task.get_task_type_display }}</strong>
+                                {% if task.is_completed %}
+                                <span class="badge-done">&#10003; Selesai</span>
+                                {% else %}
+                                <form method="POST" action="{% url 'schedules:complete_task' task.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn-done btn-small">Tandai Selesai</button>
+                                </form>
+                                {% endif %}
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </dialog>
+                {% endfor %}
+            {% endif %}
             {% if needs_plant %}
             <div class="task-card">
                 <div class="task-info">
@@ -149,22 +95,22 @@
                     <th>Tanggal Selesai</th>
                 </tr>
             </thead>
-            <tbody>
-                {% for log in care_logs %}
-                <tr>
-                    <td><strong>{{ log.plant_name }}</strong></td>
-                    <td><span class="badge-task">{{ log.get_task_type_display }}</span></td>
-                    <td>{{ log.completed_at|date:"d M Y, H:i" }}</td>
-                </tr>
-                {% empty %}
+            <tbody id="log-body">
+                {% if care_logs %}
+                    {% include 'schedules/_log_rows.html' with logs=care_logs %}
+                {% else %}
                 <tr>
                     <td colspan="3" class="empty-state" style="border:none;">
                         Belum ada riwayat perawatan. Selesaikan tugas harianmu dulu!
                     </td>
                 </tr>
-                {% endfor %}
+                {% endif %}
             </tbody>
         </table>
+        <button type="button" id="load-more-logs" class="btn-more"
+                data-url="{% url 'schedules:more_logs' %}"
+                data-offset="{{ log_initial }}"
+                {% if not has_more_logs %}hidden{% endif %}>Expand More</button>
     </div>
 </div>
 <script>
@@ -177,6 +123,77 @@
             return next - now;
         }
         setTimeout(function () { window.location.reload(); }, msUntilMidnight());
+    })();
+
+    // Reminder jam 18:00: sisa detik dihitung server (sesuai TIME_ZONE Django),
+    // jadi tidak bergantung pada jam/zona waktu browser.
+    (function () {
+        var card = document.getElementById('reminder-card');
+        var wait = {{ reminder_wait }};
+        if (card && card.hidden && wait > 0) {
+            setTimeout(function () { card.hidden = false; }, wait * 1000);
+        }
+    })();
+
+    // Pop-up Details tiap misi tanaman (elemen <dialog> bawaan browser).
+    (function () {
+        var dialogs = document.querySelectorAll('.mission-dialog');
+
+        document.querySelectorAll('[data-open-mission]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var d = document.getElementById(btn.dataset.openMission);
+                if (d && d.showModal) d.showModal();
+            });
+        });
+        dialogs.forEach(function (d) {
+            d.addEventListener('click', function (e) { if (e.target === d) d.close(); }); // klik area gelap
+            d.querySelectorAll('[data-close]').forEach(function (b) {
+                b.addEventListener('click', function () { d.close(); });
+            });
+        });
+
+        // Setelah "Tandai Selesai" halaman dimuat ulang; buka lagi pop-up tanaman tadi.
+        var open = new URLSearchParams(window.location.search).get('open');
+        if (open) {
+            dialogs.forEach(function (d) {
+                if (d.dataset.plant === open && d.showModal) d.showModal();
+            });
+            history.replaceState(null, '', window.location.pathname);
+        }
+    })();
+
+    // Plant Care Log: muat 20 log berikutnya tanpa reload halaman.
+    (function () {
+        var btn = document.getElementById('load-more-logs');
+        var body = document.getElementById('log-body');
+        if (!btn || !body) return;
+
+        btn.addEventListener('click', function () {
+            btn.disabled = true;
+            btn.textContent = 'Memuat...';
+            fetch(btn.dataset.url + '?offset=' + btn.dataset.offset, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                credentials: 'same-origin'
+            })
+            .then(function (res) {
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                return res.json();
+            })
+            .then(function (data) {
+                body.insertAdjacentHTML('beforeend', data.html);
+                btn.dataset.offset = data.next_offset;
+                if (data.has_more) {
+                    btn.disabled = false;
+                    btn.textContent = 'Expand More';
+                } else {
+                    btn.hidden = true;  // tidak ada log lagi
+                }
+            })
+            .catch(function () {
+                btn.disabled = false;
+                btn.textContent = 'Gagal memuat. Coba lagi';
+            });
+        });
     })();
 </script>
 {% endblock content %}

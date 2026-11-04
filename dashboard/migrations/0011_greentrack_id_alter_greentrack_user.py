@@ -13,14 +13,22 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='greentrack',
-            name='id',
-            field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+    migrations.AlterField(
+        model_name='greentrack',
+        name='user',
+        field=models.ForeignKey(
+            on_delete=django.db.models.deletion.CASCADE,
+            to=settings.AUTH_USER_MODEL
         ),
-        migrations.AlterField(
-            model_name='greentrack',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+    ),
+    migrations.AddField(
+        model_name='greentrack',
+        name='id',
+        field=models.BigAutoField(
+            auto_created=True,
+            primary_key=True,
+            serialize=False,
+            verbose_name='ID'
         ),
-    ]
+    ),
+]
