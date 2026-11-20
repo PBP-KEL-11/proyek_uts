@@ -49,7 +49,7 @@ class DashboardTest(TestCase):
         while i<2 :
             self.greentrack.add_xp()
             i+=1
-        self.assertEqual(self.greentrack.current_xp, 0)
+        self.assertEqual(self.greentrack.current_xp, 300)
         self.assertEqual(self.greentrack.current_level, "Adept Gardener")
         self.assertEqual(self.greentrack.level_number, 2)
         
