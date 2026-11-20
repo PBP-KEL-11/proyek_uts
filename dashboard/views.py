@@ -8,7 +8,6 @@ from django.utils import timezone
 from django.contrib import messages
 
 from plants.models import GardenPlant
-from notes.models import Note
 from dashboard.forms import GreenTrackForm
 # Create your views here.
 

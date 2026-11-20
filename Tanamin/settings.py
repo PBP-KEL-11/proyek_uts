@@ -71,6 +71,7 @@ INSTALLED_APPS = [
     'schedules',
     'plants',
     'dashboard',
+    'rest_framework',
 ]
 
 if USE_CLOUDINARY:
