@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, JsonResponse
 from dashboard.models import GreenTrack
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.db.models import Prefetch
 from django.views.decorators.http import require_POST
 from django.utils import timezone
@@ -47,6 +47,8 @@ def get_greentrack_json(request):
     return JsonResponse(greentrack_data, safe=False)
 
 def show_admin_greentrack_details(request, id):
+    if request.user.is_superuser == False:
+        return redirect("dashboard:index")
     greentrack = get_object_or_404(GreenTrack, pk = id)
     context = {
         "title":"Detail Pengguna",
