@@ -29,6 +29,7 @@ urlpatterns = [
     path('plants/', include('plants.urls')),
     path('schedules/', include('schedules.urls')),
     path('dashboard/', include('dashboard.urls')),
+    path('api/notes/', include('notes.api_urls')),
     path('', include('main.urls')),
 
     path(
