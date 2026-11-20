@@ -46,7 +46,13 @@ CLOUDINARY_STORAGE = {
     'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
     'API_SECRET': os.getenv('CLOUDINARY_API_SECRET'),
 }
-USE_CLOUDINARY = PRODUCTION and all(CLOUDINARY_STORAGE.values())
+# Set DISABLE_CLOUDINARY=True in PWS Environs to switch Cloudinary off
+# without changing any code (media then falls back to local storage).
+USE_CLOUDINARY = (
+    PRODUCTION
+    and all(CLOUDINARY_STORAGE.values())
+    and os.getenv('DISABLE_CLOUDINARY', 'False').lower() != 'true'
+)
 
 
 # Application definition
@@ -65,6 +71,7 @@ INSTALLED_APPS = [
     'schedules',
     'plants',
     'dashboard',
+    'rest_framework',
 ]
 
 if USE_CLOUDINARY:
@@ -93,7 +100,7 @@ STORAGES = {
         ),
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
     },
 }
 
